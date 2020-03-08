@@ -1,0 +1,48 @@
+ private void bt_createActionPerformed(java.awt.event.ActionEvent evt) {                                          
+       if((tf_name.getText()!=null || tf_uname.getText()!=null || tf_answer.getText()!=null || tf_pswd.getText()!=null)){
+           try {
+               Connection conn=MySqlConnection();
+               String qry="insert into admin values(name,uname,pswd,sq,answer) values (?,?,?,?,?)";
+               PreparedStatement ps=conn.prepareStatement(qry);
+               stmt.setString(1, tf_name.getText()) ;
+               stmt.setString(2, tf_uname.getText()) ;
+               stmt.setString(3, tf_pswd.getText()) ;
+               stmt.setString(4, (String) cmb_sq.getSelectedItem()) ;
+               stmt.setString(5, tf_answer.getText()) ;
+               int res=ps.executeUpdate();
+               if(res>=1)
+                   JOptionPane.showMessageDialog(null, "Account Created Successfully...");
+               else
+                   JOptionPane.showMessageDialog(null, "Something went Wrong...");
+                       
+           } catch (Exception e) {
+               JOptionPane.showMessageDialog(null,e);
+           }
+       }
+    } 
+
+
+
+
+
+
+private void autoFill_Bookid(){
+	int newid=0;
+	try{
+		DBConnection c=new DBConnection();
+		System.out.println("connection established");
+		Statement stmt = con.createStatement();
+		ResultSet rs= stmt.executeQuery("select bid from book");
+		while (rs.next()){
+			newid=rs.getInt(1);
+			System.out.println(newid);
+		if(newid==0)
+			newid=1;
+		else
+			newid++;
+		con.close();
+	}
+	catch(Exception e){
+		JOptionPane.showMessageDialog(null,e);
+	}
+}

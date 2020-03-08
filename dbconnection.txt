@@ -1,0 +1,12 @@
+ public Connection MysqlConnection(){
+        Connection conn=null;
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            conn=(Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/sportsclub", "root", "");
+           // JOptionPane.showMessageDialog(null, "Mysql Connection Successfull...");
+            return conn;
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Mysql Connection Failed...");
+            return null;
+        }
+    }

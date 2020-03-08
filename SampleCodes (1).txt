@@ -1,0 +1,146 @@
+DatabaseConnectivityClass:
+public Connection newDBConnection()
+    {Connection con=null;
+        try{
+            Class.forName("com.mysql.jdbc.Driver");
+            con= DriverManager.getConnection("jdbc:mysql://localhost:3306/sportsclub" ,"root","");
+        }
+        catch(Exception e){
+            JOptionPane.showMessageDialog(null,e);
+        }
+        finally{
+        return con;
+        }
+    }
+
+
+
+
+date chooser:
+SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+String date = sdf.format(dt_chsr.getData());
+
+
+
+
+combo chooser:
+cmb_sq.getSelectedItem();
+
+
+
+checkboxx:
+
+
+DBConnection c=new DBConnection();
+        Connection con=c.newDBConnection();
+        System.out.println("Connection Established");
+        Statement stmt = con.createStatement();
+        ResultSet rs = stmt.executeQuery("select * from admin");
+
+
+
+
+
+
+
+
+
+
+private void Search(){
+        DBConnection c=new DBConnection();
+        Connection con=c.newDBConnection();
+        System.out.println("Connection Established");
+        if((tf_uname1.getText().trim().isEmpty())){
+            ldl_warning.setVisible(true);
+        }
+        else{
+        String a1 = tf_uname1.getText();
+        String sql = "select * from admin where uname='"+a1+"'";
+        try{
+        Statement stmt = con.createStatement();
+        ResultSet rs = stmt.executeQuery(sql);
+            if(rs.next()){
+                ldl_warning.setVisible(false);
+                tf_name.setText(rs.getString(2));
+                tf_ysq.setText(rs.getString(5));
+                rs.close();
+            }
+            else{
+                JOptionPane.showMessageDialog(null,"Incorrect UserName...");
+            }
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null,e);
+        }
+        }
+    }
+
+
+jaspe........show all
+{                                         
+        DBConnection c=new DBConnection();
+        Connection con=c.newDBConnection();
+        String report = "D:\\N&N\\SportsClub\\SportsClub-master\\src\\sportsclub\\members.jrxml";
+        try{
+            JasperReport jp = JasperCompileManager.compileReport(report);
+            System.out.println("Compiled...");
+            JasperPrint jprint = JasperFillManager.fillReport(jp,null,con);
+            JasperViewer.viewReport(jprint,false);
+        }catch(Exception e){
+            
+        }
+    
+
+
+
+jasper ......select
+try{
+            JasperDesign jd = JRXmlLoader.load(report);
+            JRDesignQuery newquery = new JRDesignQuery();
+            String name= lbl_search.getText();
+            newquery.setText("select * from members where name='"+name+"'");
+            
+            JasperReport jp = JasperCompileManager.compileReport(report);
+            System.out.println("Compiled...");
+            JasperPrint jprint = JasperFillManager.fillReport(jp,null,con);
+            JasperViewer.viewReport(jprint,false);
+        }catch
+
+
+
+
+D:\N&N\SportsClub\SportsClub-master\src\sportsclub\parareport.jrxml
+
+
+
+
+********************************************************************
+comma.....
+
+public class TestConsole {
+   public static void main(String[] args) {
+      String sampleString = "A .  B .   C";
+      String[] items = sampleString.split("\\.");
+      int itemIndex = 1;
+      for (String item : items) {
+         System.out.println(itemIndex + ". " + item);
+         itemIndex++;
+      }
+   }
+}
+********************************************************************
+public class TestConsole {
+   public static void main(String[] args) {
+      String sampleString = "A .  B .   C";
+      String[] items = sampleString.split("\\s*\\.\\s*");
+      int itemIndex = 1;
+      for (String item : items) {
+         System.out.println(itemIndex + ". " + item);
+         itemIndex++;
+      }
+   }
+}
+
+*********************************************************************
+
+
+
