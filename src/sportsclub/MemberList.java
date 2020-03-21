@@ -12,6 +12,8 @@ public class MemberList {
     private String dob;
     private String bg;
     private String ctgry;
+    private String date;
+    private String lastDate;
     
     
     
@@ -24,6 +26,12 @@ public class MemberList {
         this.bg=bg;
         this.ctgry=ctgry;
     }
+    public MemberList(String id,String ctgry,String date ,String lastDate){
+        this.id=id;
+        this.ctgry=ctgry;
+        this.date=date;
+        this.lastDate=lastDate;
+    }
 
     public String getId() {
         return id;
@@ -35,6 +43,22 @@ public class MemberList {
 
     public String getName() {
         return name;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getLastDate() {
+        return lastDate;
+    }
+
+    public void setLastDate(String lastDate) {
+        this.lastDate = lastDate;
     }
 
     

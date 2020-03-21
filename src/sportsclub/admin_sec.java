@@ -42,6 +42,7 @@ public class admin_sec extends javax.swing.JFrame {
         jMenu3 = new javax.swing.JMenu();
         visitor_history = new javax.swing.JMenuItem();
         history = new javax.swing.JMenuItem();
+        jm_event = new javax.swing.JCheckBoxMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
         jMenu1 = new javax.swing.JMenu();
         vm = new javax.swing.JMenuItem();
@@ -99,6 +100,15 @@ public class admin_sec extends javax.swing.JFrame {
         });
         jMenu3.add(history);
 
+        jm_event.setSelected(true);
+        jm_event.setText("Events");
+        jm_event.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jm_eventActionPerformed(evt);
+            }
+        });
+        jMenu3.add(jm_event);
+
         jMenuItem4.setText("Logout");
         jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -133,6 +143,11 @@ public class admin_sec extends javax.swing.JFrame {
         jMenu1.add(anm);
 
         jMenuItem3.setText("ViewMemberSuggetions");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItem3);
 
         jMenuItem5.setText("AppliedMembers");
@@ -264,6 +279,19 @@ public class admin_sec extends javax.swing.JFrame {
         
     }//GEN-LAST:event_visitor_historyActionPerformed
 
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+        member_sug ms = new member_sug();
+        Desktop.add(ms);
+        ms.setVisible(true);
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
+
+    private void jm_eventActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jm_eventActionPerformed
+        events ev = new events();
+        Desktop.add(ev);
+        ev.setVisible(true);
+        
+    }//GEN-LAST:event_jm_eventActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -313,6 +341,7 @@ public class admin_sec extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JCheckBoxMenuItem jm_event;
     private javax.swing.JMenuItem visitor_history;
     private javax.swing.JMenuItem vm;
     private javax.swing.JMenuItem vob;

@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
@@ -23,7 +24,8 @@ public class memberLogin extends javax.swing.JFrame {
      */
     public memberLogin() {
         initComponents();
-        this.setLocationRelativeTo(null);
+        jPanel1.setVisible(false);
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
     }
 
     /**
@@ -36,7 +38,7 @@ public class memberLogin extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        bt_add = new javax.swing.JButton();
+        bt_login = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         cmb_bg = new javax.swing.JComboBox();
@@ -44,16 +46,23 @@ public class memberLogin extends javax.swing.JFrame {
         dt_chsr = new com.toedter.calendar.JDateChooser();
         tf_name = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel7 = new javax.swing.JLabel();
+        bt_confirm1 = new javax.swing.JButton();
+        tf_id = new javax.swing.JTextField();
+        jLabel8 = new javax.swing.JLabel();
+        dt_chsr1 = new com.toedter.calendar.JDateChooser();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 0, 51), 2, true), "MemberLogin", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 3, 18), new java.awt.Color(255, 0, 0))); // NOI18N
 
-        bt_add.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        bt_add.setText("Login");
-        bt_add.addActionListener(new java.awt.event.ActionListener() {
+        bt_login.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        bt_login.setText("Login");
+        bt_login.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bt_addActionPerformed(evt);
+                bt_loginActionPerformed(evt);
             }
         });
 
@@ -78,6 +87,15 @@ public class memberLogin extends javax.swing.JFrame {
             }
         });
 
+        jLabel6.setFont(new java.awt.Font("Tahoma", 3, 10)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(0, 204, 51));
+        jLabel6.setText("LoginWithID");
+        jLabel6.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel6MouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -95,16 +113,16 @@ public class memberLogin extends javax.swing.JFrame {
                             .addComponent(tf_name, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(dt_chsr, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(cmb_bg, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(40, Short.MAX_VALUE))
+                        .addGap(0, 33, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addComponent(bt_add, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap())
+                            .addComponent(bt_login, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(30, 30, 30))))))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -122,10 +140,66 @@ public class memberLogin extends javax.swing.JFrame {
                     .addComponent(jLabel3)
                     .addComponent(cmb_bg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 62, Short.MAX_VALUE)
-                .addComponent(bt_add)
+                .addComponent(bt_login)
                 .addGap(18, 18, 18)
-                .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel6))
                 .addGap(12, 12, 12))
+        );
+
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 51, 102), 2, true), "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(255, 0, 51))); // NOI18N
+
+        jLabel7.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel7.setText("ID");
+
+        bt_confirm1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        bt_confirm1.setText("Confirm");
+        bt_confirm1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bt_confirm1ActionPerformed(evt);
+            }
+        });
+
+        tf_id.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        tf_id.setHorizontalAlignment(javax.swing.JTextField.LEFT);
+
+        jLabel8.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel8.setText("Date Of Birth");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(bt_confirm1, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(tf_id, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(dt_chsr1, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(54, 54, 54)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel7)
+                    .addComponent(tf_id, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(72, 72, 72)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel8)
+                    .addComponent(dt_chsr1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(50, 50, 50)
+                .addComponent(bt_confirm1)
+                .addContainerGap(70, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -135,77 +209,133 @@ public class memberLogin extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(31, 31, 31)
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 126, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void bt_addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_addActionPerformed
-        String tabl = null;
-        
-        if((tf_name.getText().trim().isEmpty()) ){
-            JOptionPane.showMessageDialog(null,"Enter Your Name...");
-        }
-        else{
+    private void bt_loginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_loginActionPerformed
+      
 
-            try{
-                DBConnection c=new DBConnection();
+        if ((tf_name.getText().trim().isEmpty())) {
+            JOptionPane.showMessageDialog(null, "Enter Your Name...");
+        } else {
+
+            try {
+                DBConnection c = new DBConnection();
                 try (Connection con = c.newDBConnection()) {
                     System.out.println("connection established");
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                     String date = sdf.format(dt_chsr.getDate());
-                    PreparedStatement stmt=con.prepareStatement("select * from members where name=? and dob=? and bg=?");
+                    PreparedStatement stmt = con.prepareStatement("select * from members where name=? and dob=? and bg=?");
                     System.out.println("statement created");
-                    stmt.setString(1, tf_name.getText()) ;
-                    stmt.setString(3, (String) cmb_bg.getSelectedItem()) ;
-                    stmt.setString(2, date) ;
-                    
-                    System.out.println("statement created");
-                    ResultSet res=stmt.executeQuery();
-                    if(res.next()){
-                        String id =res.getString(1);
-                        JOptionPane.showMessageDialog(null, "Loggin Successful...");
-                        try{
+                    stmt.setString(1, tf_name.getText());
+                    stmt.setString(3, (String) cmb_bg.getSelectedItem());
+                    stmt.setString(2, date);
 
-                            String sql="update members set active=1 where id=?";
-                            stmt.setString(1, id) ;
-                            PreparedStatement un=con.prepareStatement(sql);
+                    System.out.println("statement created");
+                    ResultSet res = stmt.executeQuery();
+                    if (res.next()) {
+                        String id = res.getString(1);
+                        JOptionPane.showMessageDialog(null, "Loggin Successful...");
+                        try {
+
+                            String sql = "update members set active=1 where id=?";
+                            stmt.setString(1, id);
+                            PreparedStatement un = con.prepareStatement(sql);
                             un.executeQuery(sql);
-                            
+                            this.setVisible(false);
+                            member_sec ms = new member_sec();
+                            ms.setVisible(true);
+
                             //this.setVisible(false);
-                        }
-                        catch(Exception e){
-                            JOptionPane.showMessageDialog(null,e);
+                        } catch (Exception e) {
+                            JOptionPane.showMessageDialog(null, e);
                         }
                         //tf_name.setText("");
                         //dt_chsr.setDate("");
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Something went Wrong...");
                     }
-                    else
-                    JOptionPane.showMessageDialog(null, "Something went Wrong...");
                     con.close();
                     this.dispose();
                 }
-            }
-            catch(Exception e){
-                JOptionPane.showMessageDialog(null,e);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, e);
             }
         }
 
-    }//GEN-LAST:event_bt_addActionPerformed
+    }//GEN-LAST:event_bt_loginActionPerformed
 
     private void jLabel4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel4MouseClicked
-        mainWindow mw=new mainWindow();
+        mainWindow mw = new mainWindow();
         mw.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jLabel4MouseClicked
+
+    private void bt_confirm1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_confirm1ActionPerformed
+        if ((tf_id.getText().trim().isEmpty())) {
+            JOptionPane.showMessageDialog(null, "Enter Your ID...");
+        } else {
+
+            try {
+                DBConnection c = new DBConnection();
+                try (Connection con = c.newDBConnection()) {
+                    System.out.println("connection established");
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    String date = sdf.format(dt_chsr1.getDate());
+                    PreparedStatement stmt = con.prepareStatement("select * from members where id=? and dob=?");
+                    System.out.println("statement created");
+                    stmt.setString(1, tf_id.getText());
+                    stmt.setString(2, date);
+
+                    System.out.println("statement created");
+                    ResultSet res = stmt.executeQuery();
+                    if (res.next()) {
+                        String id = tf_id.getText();
+                        JOptionPane.showMessageDialog(null, "Loggin Successful...");
+                        try {
+
+                            String sql = "update members set active=1 where id=?";
+                            stmt.setString(1, id);
+                            PreparedStatement un = con.prepareStatement(sql);
+                            un.executeQuery(sql);
+                            this.setVisible(false);
+                            member_sec ms = new member_sec();
+                            ms.setVisible(true);
+
+                            //this.setVisible(false);
+                        } catch (Exception e) {
+                            JOptionPane.showMessageDialog(null, e);
+                        }
+                        //tf_name.setText("");
+                        //dt_chsr.setDate("");
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Something went Wrong...");
+                    }
+                    con.close();
+                    this.dispose();
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, e);
+            }
+        }
+    }//GEN-LAST:event_bt_confirm1ActionPerformed
+
+    private void jLabel6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel6MouseClicked
+        jPanel1.setVisible(true);
+    }//GEN-LAST:event_jLabel6MouseClicked
 
     /**
      * @param args the command line arguments
@@ -219,9 +349,10 @@ public class memberLogin extends javax.swing.JFrame {
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 /*if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }*/UIManager.setLookAndFeel("com.jtattoo.plaf.hifi.HiFiLookAndFeel");
+                 javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                 break;
+                 }*/
+                UIManager.setLookAndFeel("com.jtattoo.plaf.hifi.HiFiLookAndFeel");
             }
         } catch (ClassNotFoundException ex) {
             java.util.logging.Logger.getLogger(memberLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
@@ -243,14 +374,21 @@ public class memberLogin extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton bt_add;
+    private javax.swing.JButton bt_confirm1;
+    private javax.swing.JButton bt_login;
     private javax.swing.JComboBox cmb_bg;
     private com.toedter.calendar.JDateChooser dt_chsr;
+    private com.toedter.calendar.JDateChooser dt_chsr1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JTextField tf_id;
     private javax.swing.JTextField tf_name;
     // End of variables declaration//GEN-END:variables
 }

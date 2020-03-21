@@ -8,8 +8,10 @@ package sportsclub;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,55 +24,86 @@ import javax.swing.table.DefaultTableModel;
  */
 public class member_sug extends javax.swing.JInternalFrame {
 
-    
-    String id = null;
-    DefaultTableModel dt =new DefaultTableModel();
+    int id = 0;
+    DefaultTableModel dt = new DefaultTableModel();
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-    
-    
-    
-    
+    String sports = null;
+
     public member_sug() {
         initComponents();
     }
 
-    
-    public void showItemToFields(int index) throws ParseException{
-        
-        tf_name.setText(member_list.getModel().getValueAt(index, 2).toString()); 
-        tf_phn.setText(member_list.getModel().getValueAt(index, 3).toString()); 
-        cmb_bg.setSelectedItem(member_list.getModel().getValueAt(index, 5).toString()); 
-        dc_dob.setDate( sdf.parse(member_list.getModel().getValueAt(index, 4).toString())  ); 
-        String sports= (member_list.getModel().getValueAt(index, 6).toString());
-        
-        if(sports.contains("Foot")){
-                cb_fb.setSelected(true);
+    public ArrayList<MemberList> loadData() {
+        ArrayList<MemberList> al = null;
+        al = new ArrayList<MemberList>();
+        try {
+            DBConnection c = new DBConnection();
+            Connection con = c.newDBConnection();
+            System.out.println("Connection Established");
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("select * from members");
+            MemberList list;
+
+            while (rs.next()) {
+                list = new MemberList(rs.getString(1), rs.getString("name"), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6));
+                al.add(list);
+
             }
-            else
-                cb_fb.setSelected(false);
-            
-            if(sports.contains("Cric")){
-                cb_ckt.setSelected(true);
-            }
-            else
-                cb_ckt.setSelected(false);
-            
-            if(sports.contains("Voll")){
-                cb_vb.setSelected(true);
-            }
-            else
-                cb_vb.setSelected(false);
-            
-        
-        
-        
+        } catch (Exception e) {
+            System.out.println("Error in Retrive Data : " + e);
+        }
+        return al;
     }
-    
-    
-    
-    
-    
-    
+
+    public void fillTable() {
+        ArrayList<MemberList> al = loadData();
+        dt = (DefaultTableModel) member_list.getModel();
+        dt.setRowCount(0);
+        Object[] row = new Object[7];
+        int j = 1;
+        for (int i = 0; i < al.size(); i++) {
+            row[0] = j;
+            row[1] = al.get(i).getId();
+            row[2] = al.get(i).getName();
+            row[3] = al.get(i).getPhone();
+            row[4] = al.get(i).getDob();
+            row[5] = al.get(i).getBg();
+            row[6] = al.get(i).getCtgry();
+            j++;
+            dt.addRow(row);
+
+        }
+
+    }
+
+    public void showItemToFields(int index) throws ParseException {
+
+        tf_name.setText(member_list.getModel().getValueAt(index, 3).toString());
+        tf_phn.setText(member_list.getModel().getValueAt(index, 4).toString());
+        cmb_bg.setSelectedItem(member_list.getModel().getValueAt(index, 6).toString());
+        dc_dob.setDate(sdf.parse(member_list.getModel().getValueAt(index, 5).toString()));
+        sports = (member_list.getModel().getValueAt(index, 7).toString());
+
+        if (sports.contains("Foot")) {
+            cb_fb.setSelected(true);
+        } else {
+            cb_fb.setSelected(false);
+        }
+
+        if (sports.contains("Cric")) {
+            cb_ckt.setSelected(true);
+        } else {
+            cb_ckt.setSelected(false);
+        }
+
+        if (sports.contains("Voll")) {
+            cb_vb.setSelected(true);
+        } else {
+            cb_vb.setSelected(false);
+        }
+
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -112,7 +145,7 @@ public class member_sug extends javax.swing.JInternalFrame {
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
                 false, false, false, false, false, false, false
@@ -133,10 +166,13 @@ public class member_sug extends javax.swing.JInternalFrame {
         });
         jScrollPane1.setViewportView(member_list);
         if (member_list.getColumnModel().getColumnCount() > 0) {
-            member_list.getColumnModel().getColumn(0).setResizable(false);
-            member_list.getColumnModel().getColumn(2).setResizable(false);
-            member_list.getColumnModel().getColumn(3).setResizable(false);
-            member_list.getColumnModel().getColumn(4).setResizable(false);
+            member_list.getColumnModel().getColumn(0).setPreferredWidth(5);
+            member_list.getColumnModel().getColumn(1).setPreferredWidth(30);
+            member_list.getColumnModel().getColumn(2).setPreferredWidth(30);
+            member_list.getColumnModel().getColumn(3).setPreferredWidth(25);
+            member_list.getColumnModel().getColumn(4).setPreferredWidth(15);
+            member_list.getColumnModel().getColumn(5).setPreferredWidth(10);
+            member_list.getColumnModel().getColumn(6).setPreferredWidth(50);
         }
 
         cb_vb.setText("VolleyBall");
@@ -268,82 +304,84 @@ public class member_sug extends javax.swing.JInternalFrame {
     private void bt_AcceptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_AcceptActionPerformed
         // TODO add your handling code for Update:
 
-        if((tf_name.getText().trim().isEmpty()) || (tf_phn.getText().trim().isEmpty()) ){
-            JOptionPane.showMessageDialog(null,"all fields are recquired...");
-        }
-        else{
+        if ((tf_name.getText().trim().isEmpty()) || (tf_phn.getText().trim().isEmpty())) {
+            JOptionPane.showMessageDialog(null, "all fields are recquired...");
+        } else {
 
-            try{
-                DBConnection c=new DBConnection();
+            try {
+                DBConnection c = new DBConnection();
                 try (Connection con = c.newDBConnection()) {
                     System.out.println("connection established");
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                     String date = sdf.format(dc_dob.getDate());
-                    String qry ="update members set name=?, phone=?, dob=?, bg=?, sports=?  where id=?" ;
-                    PreparedStatement stmt=con.prepareStatement(qry);
+                    PreparedStatement stmt = con.prepareStatement("insert into members(id,name,phone,dob,bg,sports) values(?,?,?,?,?,?)");
                     System.out.println("statement created");
-                    stmt.setString(1, tf_name.getText()) ;
-                    stmt.setString(2, tf_phn.getText()) ;
-                    stmt.setString(3, date) ;
-                    stmt.setString(4, (String) cmb_bg.getSelectedItem()) ;
-                    String sports=null;
-                    if(cb_fb.isSelected()){
-                        if(sports==null)
-                        sports="FootBall";
-                        else
-                        sports=sports+"FootBall";}
-                    if(cb_ckt.isSelected()){
-                        if(sports==null)
-                        sports="Cricket";
-                        else
-                        sports=sports+",Cricket";}
-                    if(cb_vb.isSelected()){
-                        if(sports==null)
-                        sports="VolleyBall";
-                        else
-                        sports=sports+",VolleyBall";}
-                    stmt.setString(5, sports) ;
-                    stmt.setString(6, id);
+                    stmt.setString(1, idget());
+                    stmt.setString(2, tf_name.getText());
+                    stmt.setString(3, tf_phn.getText());
+                    stmt.setString(4, (date));
+                    stmt.setString(5, (String) cmb_bg.getSelectedItem());
+                    String sports = null;
+                    if (cb_fb.isSelected()) {
+                        if (sports == null) {
+                            sports = "FootBall";
+                        } else {
+                            sports = sports + "FootBall";
+                        }
+                    }
+                    if (cb_ckt.isSelected()) {
+                        if (sports == null) {
+                            sports = "Cricket";
+                        } else {
+                            sports = sports + ",Cricket";
+                        }
+                    }
+                    if (cb_vb.isSelected()) {
+                        if (sports == null) {
+                            sports = "VolleyBall";
+                        } else {
+                            sports = sports + ",VolleyBall";
+                        }
+                    }
+                    stmt.setString(6, sports);
                     System.out.println("statement created");
-                    int res=stmt.executeUpdate();
-                    if(res>=1){
-                        JOptionPane.showMessageDialog(null, "MemberDetail Updated Successfully...");
-                        try{
+                    int res = stmt.executeUpdate();
+                    if (res >= 1) {
+                        JOptionPane.showMessageDialog(null, "Member Added Successfully...");
+                        try {
 
-                            String sql="select * from admin where active=1";
-                            PreparedStatement un=con.prepareStatement(sql);
-                            ResultSet rs= un.executeQuery(sql);
-                            String uname="";
-                            if(rs.next()){
-                                uname=rs.getString(3);
+                            String sql = "select * from admin where active=1";
+                            PreparedStatement un = con.prepareStatement(sql);
+                            ResultSet rs = un.executeQuery(sql);
+                            String uname = "";
+                            if (rs.next()) {
+                                uname = rs.getString(3);
                             }
-                            PreparedStatement pst=con.prepareStatement("insert into history values(?,?,?,?)");
-                            pst.setString(1, uname) ;
-                            pst.setString(2, tf_name.getText()) ;
-                            Date today =new Date();
-                            pst.setString(3, sdf.format(today)) ;
-                            pst.setString(4, "Update") ;
+                            PreparedStatement pst = con.prepareStatement("insert into history values(?,?,?,?)");
+                            pst.setString(1, uname);
+                            pst.setString(2, tf_name.getText());
+                            Date today = new Date();
+                            pst.setString(3, sdf.format(today));
+                            pst.setString(4, "Added");
                             System.out.println("statement created");
-                            int history=pst.executeUpdate();
+                            pst.executeUpdate();
+                            deleteEntry();
+
                             con.close();
                             //this.setVisible(false);
-                        }
-                        catch(Exception e){
-                            JOptionPane.showMessageDialog(null,e);
+                        } catch (Exception e) {
+                            JOptionPane.showMessageDialog(null, e);
                         }
                         //tf_name.setText("");
                         //dt_chsr.setDate("");
-                        fillTable();
-                        id=null;
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Something went Wrong...");
                     }
-                    else
-                    JOptionPane.showMessageDialog(null, "Something went Wrong...");
                     con.close();
-                    id = null;
-                    //this.setVisible(false);
+                    this.dispose();
                 }
-            }
-            catch(Exception e){
-                JOptionPane.showMessageDialog(null,e);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, e);
             }
         }
     }//GEN-LAST:event_bt_AcceptActionPerformed
@@ -356,74 +394,87 @@ public class member_sug extends javax.swing.JInternalFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
 
         /*DBConnection c=new DBConnection();
-        Connection con=c.newDBConnection();
-        String report = "D:\\N&N\\SportsClub\\SportsClub-master\\src\\sportsclub\\members.jrxml";
-        try{
-            JasperDesign jd = JRXmlLoader.load(report);
-            JRDesignQuery newquery = new JRDesignQuery();
-            String name= lbl_search.getText();
-            newquery.setText("select * from members where name='"+name+"'");
-            jd.setQuery(newquery);
-            JasperReport jp = JasperCompileManager.compileReport(jd);
-            System.out.println("Compiled...");
-            JasperPrint jprint = JasperFillManager.fillReport(jp,null,con);
-            JasperViewer.viewReport(jprint,false);
-        }catch(Exception e){
+         Connection con=c.newDBConnection();
+         String report = "D:\\N&N\\SportsClub\\SportsClub-master\\src\\sportsclub\\members.jrxml";
+         try{
+         JasperDesign jd = JRXmlLoader.load(report);
+         JRDesignQuery newquery = new JRDesignQuery();
+         String name= lbl_search.getText();
+         newquery.setText("select * from members where name='"+name+"'");
+         jd.setQuery(newquery);
+         JasperReport jp = JasperCompileManager.compileReport(jd);
+         System.out.println("Compiled...");
+         JasperPrint jprint = JasperFillManager.fillReport(jp,null,con);
+         JasperViewer.viewReport(jprint,false);
+         }catch(Exception e){
 
-        }*/
+         }*/
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void bt_DecclineActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_DecclineActionPerformed
         // TODO add your handling code for Delete:
-        if(id==null){
+        if (id == 0) {
             System.out.println("Select a member first...");
-        }else{
+        } else {
             int opt = JOptionPane.showConfirmDialog(null, "Do you really want to Delete", "Delete", JOptionPane.YES_NO_OPTION);
-            if(opt==0){
-                try{
-                    String qry = "delete from members where id=?";
-                    DBConnection c=new DBConnection();
-                    Connection con = c.newDBConnection();
-                    PreparedStatement ps = con.prepareStatement(qry);
-                    ps.setString(1, id);
-                    //JOptionPane.showConfirmDialog(rootPane, closable);
-                    int res=ps.executeUpdate();
-                    if(res>=1){
-                        JOptionPane.showMessageDialog(null, "Member Deleted Successfully...");
-                        try{
-
-                            String sql="select * from admin where active=1";
-                            PreparedStatement un=con.prepareStatement(sql);
-                            ResultSet rs= un.executeQuery(sql);
-                            String uname="";
-                            if(rs.next()){
-                                uname=rs.getString(3);
-                            }
-                            PreparedStatement pst=con.prepareStatement("insert into history values(?,?,?,?)");
-                            pst.setString(1, uname) ;
-                            pst.setString(2, tf_name.getText()) ;
-                            Date today =new Date();
-                            pst.setString(3, sdf.format(today)) ;
-                            pst.setString(4, "Added") ;
-                            System.out.println("statement created");
-                            int history=pst.executeUpdate();
-                            con.close();
-                            //this.setVisible(false);
-                        }
-                        catch(Exception e){
-                            JOptionPane.showMessageDialog(null,e);
-                        }
-                        fillTable();
-                        id=null;
-                    }else{
-                        JOptionPane.showMessageDialog(null, "Member Deletetion Failed...");
-                    }
-                }catch(Exception e){
-                    JOptionPane.showMessageDialog(null, "somthin...");
-                }
+            if (opt == 0) {
+                deleteEntry();
             }
         }
     }//GEN-LAST:event_bt_DecclineActionPerformed
+
+    public void deleteEntry() {
+        try {
+            String qry = "delete from member_sug where name=?,phone=?,dob=?,bg=?,sports=?";
+            DBConnection c = new DBConnection();
+            Connection con = c.newDBConnection();
+            PreparedStatement ps = con.prepareStatement(qry);
+            ps.setString(1, tf_name.getText());
+            ps.setString(2, tf_phn.getText());
+            ps.setString(3, sdf.format(dc_dob.getDate()));
+            ps.setString(4, (String) cmb_bg.getSelectedItem());
+            ps.setString(5, sports);
+            //JOptionPane.showConfirmDialog(rootPane, closable);
+            int res = ps.executeUpdate();
+            if (res >= 1) {
+                tf_name.setText("");
+                tf_phn.setText("");
+                cb_ckt.setSelected(false);
+                cb_fb.setSelected(false);
+                cb_vb.setSelected(false);
+                cmb_bg.setSelectedIndex(0);
+                dc_dob.setDate(null);
+                id = 0;
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "somthin...");
+        }
+    }
+
+    private String idget() {
+        int newid = 0;
+        try {
+            DBConnection c = new DBConnection();
+            Connection con = c.newDBConnection();
+            System.out.println("connection established");
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("select id from members");
+            while (rs.next()) {
+                String id[] = rs.getString(1).split("-");
+                newid = Integer.parseInt(id[1]);;
+            }
+            if (newid == 0) {
+                newid = 1;
+            } else {
+                newid++;
+            }
+            con.close();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+
+        return "M-" + newid;
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

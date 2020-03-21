@@ -9,13 +9,16 @@ import java.sql.*;
 import java.text.SimpleDateFormat;
 import javax.swing.*;
 import java.util.Date;
+
 /**
  *
  * @author Login
  */
 public class newMember extends javax.swing.JInternalFrame {
 
-    String ids =null;
+    String ids = null;
+    String tabl = null;
+
     /**
      * Creates new form newMember
      */
@@ -192,122 +195,123 @@ public class newMember extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_cb_vbActionPerformed
 
     private void bt_addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_addActionPerformed
-       String tabl = null;
-        if(jlbl_av.getText().trim().equals("AddNewMember")){
-           tabl="members";
-           ids="M-";
+        
+        if (jlbl_av.getText().trim().equals("AddNewMember")) {
+            tabl = "members";
+            ids = "M-";
+        } else if (jlbl_av.getText().trim().equals("Suggest_A_Member")) {
+            tabl = "visitors";
+            ids = "V-";
         }
-        else if(jlbl_av.getText().trim().equals("Suggest_A_Member")){
-            tabl="visitors";
-            ids="V-";
-        }
-        if((tf_name.getText().trim().isEmpty()) || (tf_phoneno.getText().trim().isEmpty()) ){
-            JOptionPane.showMessageDialog(null,"all fields are recquired...");
-        }
-        else{
-                
-                    try{
-                        DBConnection c=new DBConnection();
-                        try (Connection con = c.newDBConnection()) {
-                        System.out.println("connection established");
-                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                        String date = sdf.format(dt_chsr.getDate());
-                        PreparedStatement stmt=con.prepareStatement("insert into "+tabl+"(id,name,phone,dob,bg,sports) values(?,?,?,?,?,?)");
-                        System.out.println("statement created");
-                        stmt.setString(1, idget());
-                        stmt.setString(2, tf_name.getText()) ;
-                        stmt.setString(3, tf_phoneno.getText()) ;
-                        stmt.setString(4, (date)) ;
-                        stmt.setString(5, (String) cmb_bg.getSelectedItem()) ;
-                        String sports=null;
-                        if(cb_fb.isSelected()){
-                            if(sports==null)
-                                sports="FootBall";
-                            else
-                                sports=sports+"FootBall";}
-                        if(cb_c.isSelected()){
-                            if(sports==null)
-                                sports="Cricket";
-                            else
-                            sports=sports+",Cricket";}
-                        if(cb_vb.isSelected()){
-                            if(sports==null)
-                                sports="VolleyBall";
-                            else
-                            sports=sports+",VolleyBall";}
-                        stmt.setString(6, sports) ;
-                        System.out.println("statement created");
-                        int res=stmt.executeUpdate();
-                        if(res>=1){
-                            JOptionPane.showMessageDialog(null, "Member Added Successfully...");
-                            try{
-                                
-                                
-                                String sql="select * from admin where active=1";
-                                PreparedStatement un=con.prepareStatement(sql);
-                                ResultSet rs= un.executeQuery(sql);
-                                String uname="";
-                                if(rs.next()){
-                                    uname=rs.getString(3);
-                                }
-                                PreparedStatement pst=con.prepareStatement("insert into history values(?,?,?,?)");
-                                pst.setString(1, uname) ;
-                                pst.setString(2, tf_name.getText()) ;
-                                Date today =new Date();
-                                pst.setString(3, sdf.format(today)) ;
-                                pst.setString(4, "Added") ;
-                                System.out.println("statement created");
-                                int history=pst.executeUpdate();
-                                con.close();
-                                //this.setVisible(false);
-                            }
-                        catch(Exception e){
-                            JOptionPane.showMessageDialog(null,e);
-                        }
-                            //tf_name.setText("");
-                            //dt_chsr.setDate("");
-                        }
-                        else
-                            JOptionPane.showMessageDialog(null, "Something went Wrong...");
-                        con.close();
-                        this.dispose();
+        if ((tf_name.getText().trim().isEmpty()) || (tf_phoneno.getText().trim().isEmpty())) {
+            JOptionPane.showMessageDialog(null, "all fields are recquired...");
+        } else {
+
+            try {
+                DBConnection c = new DBConnection();
+                try (Connection con = c.newDBConnection()) {
+                    System.out.println("connection established");
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    String date = sdf.format(dt_chsr.getDate());
+                    PreparedStatement stmt = con.prepareStatement("insert into " + tabl + "(id,name,phone,dob,bg,sports) values(?,?,?,?,?,?)");
+                    System.out.println("statement created");
+                    stmt.setString(1, idget());
+                    stmt.setString(2, tf_name.getText());
+                    stmt.setString(3, tf_phoneno.getText());
+                    stmt.setString(4, (date));
+                    stmt.setString(5, (String) cmb_bg.getSelectedItem());
+                    String sports = null;
+                    if (cb_fb.isSelected()) {
+                        if (sports == null) {
+                            sports = "FootBall";
+                        } else {
+                            sports = sports + "FootBall";
                         }
                     }
-                    catch(Exception e){
-                        JOptionPane.showMessageDialog(null,e);
+                    if (cb_c.isSelected()) {
+                        if (sports == null) {
+                            sports = "Cricket";
+                        } else {
+                            sports = sports + ",Cricket";
+                        }
+                    }
+                    if (cb_vb.isSelected()) {
+                        if (sports == null) {
+                            sports = "VolleyBall";
+                        } else {
+                            sports = sports + ",VolleyBall";
+                        }
+                    }
+                    stmt.setString(6, sports);
+                    System.out.println("statement created");
+                    int res = stmt.executeUpdate();
+                    if (res >= 1) {
+                        JOptionPane.showMessageDialog(null, "Member Added Successfully...");
+                        try {
+
+                            String sql = "select * from admin where active=1";
+                            PreparedStatement un = con.prepareStatement(sql);
+                            ResultSet rs = un.executeQuery(sql);
+                            String uname = "";
+                            if (rs.next()) {
+                                uname = rs.getString(3);
+                            }
+                            PreparedStatement pst = con.prepareStatement("insert into history values(?,?,?,?)");
+                            pst.setString(1, uname);
+                            pst.setString(2, tf_name.getText());
+                            Date today = new Date();
+                            pst.setString(3, sdf.format(today));
+                            pst.setString(4, "Added");
+                            System.out.println("statement created");
+                            int history = pst.executeUpdate();
+                            con.close();
+                            //this.setVisible(false);
+                        } catch (Exception e) {
+                            JOptionPane.showMessageDialog(null, e);
+                        }
+                            //tf_name.setText("");
+                        //dt_chsr.setDate("");
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Something went Wrong...");
+                    }
+                    con.close();
+                    this.dispose();
                 }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, e);
             }
-       
+        }
+
     }//GEN-LAST:event_bt_addActionPerformed
-private String idget(){
-        int newid=0;
-        try{
-            DBConnection c=new DBConnection();
-            Connection con=c.newDBConnection();
+    private String idget() {
+        int newid = 0;
+        try {
+            DBConnection c = new DBConnection();
+            Connection con = c.newDBConnection();
             System.out.println("connection established");
             Statement stmt = con.createStatement();
-            ResultSet rs= stmt.executeQuery("select id from visitors");
-            while (rs.next()){
+            ResultSet rs = stmt.executeQuery("select id from '"+tabl+"'");
+            while (rs.next()) {
                 String id[] = rs.getString(1).split("-");
-                newid=Integer.parseInt(id[1]);;
+                newid = Integer.parseInt(id[1]);;
             }
-            if(newid==0)
-                newid=1;
-            else
+            if (newid == 0) {
+                newid = 1;
+            } else {
                 newid++;
-        con.close();
+            }
+            con.close();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
         }
-        catch(Exception e){
-            JOptionPane.showMessageDialog(null,e);
-        }
-        
-            return ids+newid;
+
+        return ids + newid;
     }
 
-public void setAV(String a){
-    jlbl_av.setText(a);
-    jlbl_av.setVisible(false);
-}
+    public void setAV(String a) {
+        jlbl_av.setText(a);
+        jlbl_av.setVisible(false);
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bt_add;
