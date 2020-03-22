@@ -238,7 +238,7 @@ public class memberLogin extends javax.swing.JFrame {
                     System.out.println("connection established");
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                     String date = sdf.format(dt_chsr.getDate());
-                    PreparedStatement stmt = con.prepareStatement("select * from members where name=? and dob=? and bg=?");
+                    PreparedStatement stmt = con.prepareStatement("select * from members where name=?,dob=?,bg=?");
                     System.out.println("statement created");
                     stmt.setString(1, tf_name.getText());
                     stmt.setString(3, (String) cmb_bg.getSelectedItem());
