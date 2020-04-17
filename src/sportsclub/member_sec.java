@@ -32,13 +32,13 @@ public class member_sec extends javax.swing.JFrame {
 
         fillTable_my();
         fillData();
-        if (lbl_spitem.getText().contains("Foot")) {
+        if (lbl_spitem.getText().contains("Foo")) {
             fillTable_new("FootBall");
         }
-        if (lbl_spitem.getText().contains("Cri")) {
+        if (lbl_spitem.getText().contains("Cr")) {
             fillTable_new("Cricket");
         }
-        if (lbl_spitem.getText().contains("Voll")) {
+        if (lbl_spitem.getText().contains("Vo")) {
             fillTable_new("VolleyBall");
         }
 
@@ -89,7 +89,6 @@ public class member_sec extends javax.swing.JFrame {
     public void fillTable_new(String ctry) {
         ArrayList<MemberList> al = loadData(ctry);
         dt = (DefaultTableModel) tbl_new_ev.getModel();
-        dt.setRowCount(0);
         Object[] row = new Object[4];
         for (int i = 0; i < al.size(); i++) {
             row[0] = al.get(i).getId();
@@ -353,7 +352,7 @@ public class member_sec extends javax.swing.JFrame {
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 266, Short.MAX_VALUE)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lbl_name, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -389,6 +388,7 @@ public class member_sec extends javax.swing.JFrame {
 
     private void bt_applyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_applyActionPerformed
 
+        String eid = tbl_new_ev.getModel().getValueAt(tbl_new_ev.getSelectedRow(), 3).toString();;
         try {
             PreparedStatement stmt = con.prepareStatement("select event_id from members where id=?");
             stmt.setString(1, lbl_id.getText());

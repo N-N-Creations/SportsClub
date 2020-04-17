@@ -49,6 +49,8 @@ CREATE TABLE `event` (
 
 /*Data for the table `event` */
 
+insert  into `event`(`event_id`,`name`,`category`,`date`,`lastdate`) values ('E-1','CricketMatch','Cricket','2020-04-24','2020-04-23'),('E-2','FootBallMatch','FootBall','2020-04-23','2020-04-21'),('E-3','VolleyBallMatch','VolleyBall','2020-04-28','2020-04-25');
+
 /*Table structure for table `history` */
 
 DROP TABLE IF EXISTS `history`;
@@ -94,13 +96,14 @@ CREATE TABLE `members` (
   `bg` varchar(5) NOT NULL,
   `sports` varchar(50) NOT NULL,
   `active` int(3) default NULL,
-  `event_id` varchar(5) default NULL,
+  `event_id` varchar(15) default NULL,
+  `ev_app` varchar(15) default NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Data for the table `members` */
 
-insert  into `members`(`id`,`name`,`phone`,`dob`,`bg`,`sports`,`active`,`event_id`) values ('M-1','Mohammed rinshad','9895612423','1999-07-18','A+','FootBall,Cricket,VolleyBall',NULL,NULL),('M-10','bahu','9876543210','2007-02-07','O+','FootBall,VolleyBall',NULL,NULL),('M-11','Muneesh','9654321087','2019-02-06','A+','VolleyBall',NULL,NULL),('M-12','bahu','9876543210','1999-06-24','B+','FootBall,VolleyBall',NULL,NULL),('M-13','Sreerag','8012345679','2019-03-13','O+','Cricket',NULL,NULL),('M-14','nidhin','9876543210','2000-04-03','B+','FootBall,Cricket',NULL,NULL),('M-15','nisham','7356773248','2001-12-20','A+','FootBall,VolleyBall',NULL,NULL),('M-16','bineesh','9747311146','2001-11-15','A+','FootBall,Cricket,VolleyBall',NULL,NULL),('M-2','Nidhin Pep','9567495367','2000-11-17','AB+','FootBall,Cricket',NULL,NULL),('M-3','Nishad','9745016315','1999-08-24','AB+','VolleyBall',NULL,NULL),('M-4','Anandu','9876543210','2000-02-29','A+','FootBall,Cricket,VolleyBall',NULL,NULL),('M-5','nejeeb','8137952190','2000-08-16','B+','FootBall,Cricket',NULL,NULL),('M-6','Shibil','7736223427','2000-04-30','O+','VolleyBall',NULL,NULL),('M-7','Binesh','9747311146','2001-11-15','A+','FootBall',NULL,NULL),('M-8','Sreerag','9876543210','1999-05-12','AB+','FootBall,Cricket,VolleyBall',NULL,NULL),('M-9','sreerag','9876543210','2000-02-29','O-','FootBall',NULL,NULL);
+insert  into `members`(`id`,`name`,`phone`,`dob`,`bg`,`sports`,`active`,`event_id`,`ev_app`) values ('M-1','Mohammed rinshad','9895612423','1999-07-18','A+','FootBall,Cricket,VolleyBall',NULL,NULL,NULL),('M-10','bahu','9876543210','2007-02-07','O+','FootBall,VolleyBall',0,NULL,NULL),('M-11','Muneesh','9654321087','2019-02-06','A+','VolleyBall',NULL,NULL,NULL),('M-12','bahu','9876543210','1999-06-24','B+','FootBall,VolleyBall',NULL,NULL,NULL),('M-13','Sreerag','8012345679','2019-03-13','O+','Cricket',NULL,NULL,NULL),('M-14','nidhin','9876543210','2000-04-03','B+','FootBall,Cricket',NULL,NULL,NULL),('M-15','nisham','7356773248','2001-12-20','A+','FootBall,VolleyBall',NULL,NULL,NULL),('M-16','bineesh','9747311146','2001-11-15','A+','FootBall,Cricket,VolleyBall',NULL,NULL,NULL),('M-2','Nidhin Pep','9567495367','2000-11-17','AB+','FootBall,Cricket',NULL,NULL,NULL),('M-3','Nishad','9745016315','1999-08-24','AB+','VolleyBall',NULL,NULL,NULL),('M-4','Anandu','9876543210','2000-02-29','A+','FootBall,Cricket,VolleyBall',NULL,NULL,NULL),('M-5','nejeeb','8137952190','2000-08-16','B+','FootBall,Cricket',NULL,NULL,NULL),('M-6','Shibil','7736223427','2000-04-30','O+','VolleyBall',NULL,NULL,NULL),('M-7','Binesh','9747311146','2001-11-15','A+','FootBall',NULL,NULL,NULL),('M-8','Sreerag','9876543210','1999-05-12','AB+','FootBall,Cricket,VolleyBall',NULL,NULL,NULL),('M-9','sreerag','9876543210','2000-02-29','O-','FootBall',NULL,NULL,NULL);
 
 /*Table structure for table `visitors` */
 

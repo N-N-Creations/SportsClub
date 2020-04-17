@@ -26,7 +26,13 @@ public class MemberList {
         this.bg=bg;
         this.ctgry=ctgry;
     }
-    public MemberList(String id,String ctgry,String date ,String lastDate){
+    public MemberList(String id,String name,String ctgry,String date ,String lastDate){
+        this.id=id;
+        this.name=name;
+        this.ctgry=ctgry;
+        this.date=date;
+        this.lastDate=lastDate;
+    }public MemberList(String id,String ctgry,String date ,String lastDate){
         this.id=id;
         this.ctgry=ctgry;
         this.date=date;

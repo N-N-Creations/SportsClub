@@ -26,7 +26,6 @@ public class events extends javax.swing.JInternalFrame {
     DefaultTableModel dt = new DefaultTableModel();
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     DBConnection c = new DBConnection();
-    Connection con = c.newDBConnection();
     int add = 1;
     String id = null;
 
@@ -40,14 +39,15 @@ public class events extends javax.swing.JInternalFrame {
         ArrayList<MemberList> al = loadData();
         dt = (DefaultTableModel) event_list.getModel();
         dt.setRowCount(0);
-        Object[] row = new Object[5];
+        Object[] row = new Object[6];
         int j = 1;
         for (int i = 0; i < al.size(); i++) {
             row[0] = j;
             row[1] = al.get(i).getId();
-            row[2] = al.get(i).getCtgry();
-            row[3] = al.get(i).getDate();
-            row[4] = al.get(i).getLastDate();
+            row[2] = al.get(i).getName();
+            row[3] = al.get(i).getCtgry();
+            row[4] = al.get(i).getDate();
+            row[5] = al.get(i).getLastDate();
             j++;
             dt.addRow(row);
 
@@ -61,11 +61,12 @@ public class events extends javax.swing.JInternalFrame {
         try {
 
             System.out.println("Connection Established");
+            Connection con = c.newDBConnection();
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("select * from event");
             MemberList list;
             while (rs.next()) {
-                list = new MemberList(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4));
+                list = new MemberList(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5));
                 al.add(list);
             }
 
@@ -78,9 +79,10 @@ public class events extends javax.swing.JInternalFrame {
 
     public void showItemToFields(int index) throws ParseException {
         id = event_list.getModel().getValueAt(index, 1).toString();
-        dc_date.setDate(sdf.parse(event_list.getModel().getValueAt(index, 3).toString()));
-        dc_ldate.setDate(sdf.parse(event_list.getModel().getValueAt(index, 4).toString()));
-        String sports = event_list.getModel().getValueAt(index, 2).toString();
+        tf_name.setText(event_list.getModel().getValueAt(index, 2).toString());
+        dc_date.setDate(sdf.parse(event_list.getModel().getValueAt(index, 4).toString()));
+        dc_ldate.setDate(sdf.parse(event_list.getModel().getValueAt(index, 5).toString()));
+        String sports = event_list.getModel().getValueAt(index, 3).toString();
         if (sports.contains("Cri")) {
             cmb_ctry.setSelectedIndex(0);
         } else if (sports.contains("Foot")) {
@@ -126,14 +128,14 @@ public class events extends javax.swing.JInternalFrame {
 
             },
             new String [] {
-                "SL.NO", "Event_id", "Catagory", "Date", "LastDate"
+                "SL.NO", "Event_id", "Name", "Catagory", "Date", "LastDate"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -152,15 +154,17 @@ public class events extends javax.swing.JInternalFrame {
         jScrollPane1.setViewportView(event_list);
         if (event_list.getColumnModel().getColumnCount() > 0) {
             event_list.getColumnModel().getColumn(0).setResizable(false);
-            event_list.getColumnModel().getColumn(0).setPreferredWidth(10);
+            event_list.getColumnModel().getColumn(0).setPreferredWidth(5);
             event_list.getColumnModel().getColumn(1).setResizable(false);
-            event_list.getColumnModel().getColumn(1).setPreferredWidth(10);
+            event_list.getColumnModel().getColumn(1).setPreferredWidth(5);
             event_list.getColumnModel().getColumn(2).setResizable(false);
-            event_list.getColumnModel().getColumn(2).setPreferredWidth(30);
+            event_list.getColumnModel().getColumn(2).setPreferredWidth(20);
             event_list.getColumnModel().getColumn(3).setResizable(false);
-            event_list.getColumnModel().getColumn(3).setPreferredWidth(25);
+            event_list.getColumnModel().getColumn(3).setPreferredWidth(20);
             event_list.getColumnModel().getColumn(4).setResizable(false);
             event_list.getColumnModel().getColumn(4).setPreferredWidth(25);
+            event_list.getColumnModel().getColumn(5).setResizable(false);
+            event_list.getColumnModel().getColumn(5).setPreferredWidth(25);
         }
 
         bt_add_edit.setText("Add");
@@ -262,7 +266,7 @@ public class events extends javax.swing.JInternalFrame {
 
         jButton1.setForeground(new java.awt.Color(255, 0, 0));
         jButton1.setText("X");
-        jButton1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jButton1.setBorder(javax.swing.BorderFactory.createBevelBorder(0));
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -307,43 +311,45 @@ public class events extends javax.swing.JInternalFrame {
 
         String sql = null, result = null;
         if (add == 0) {
-            
+
             sql = "update event set name=?,category=?,date=?,lastdate=? where event_id=?";
             result = "Updated";
         } else if (add == 1) {
-            
+
             sql = "insert into event(name,category,date,lastdate,event_id) values(?,?,?,?,?)";
             result = "Added";
         }
-        
+
         try {
+            Connection con = c.newDBConnection();
             PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setString(1, tf_name.getText());
             stmt.setString(2, (String) cmb_ctry.getSelectedItem());
             stmt.setString(3, sdf.format(dc_date.getDate()));
             stmt.setString(4, sdf.format(dc_ldate.getDate()));
-            if(add == 1){
+            if (add == 1) {
                 stmt.setString(5, idget());
-            }else if (add == 0) {
+            } else if (add == 0) {
                 stmt.setString(5, id);
             }
-            
-            
+
             int rs = stmt.executeUpdate();
-            if(rs>=1){
-                JOptionPane.showMessageDialog(null, "Event "+result+" Successfully...");
+            if (rs >= 1) {
+                JOptionPane.showMessageDialog(null, "Event " + result + " Successfully...");
+                fillTable();
             }
-            
+
         } catch (Exception e) {
         }
         fillTable();
-        
+
 
     }//GEN-LAST:event_bt_add_editActionPerformed
 
     private String idget() {
         int newid = 0;
         try {
+            Connection con = c.newDBConnection();
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("select event_id from event");
             while (rs.next()) {
@@ -362,7 +368,7 @@ public class events extends javax.swing.JInternalFrame {
 
         return "E-" + newid;
     }
-    
+
     private void event_listMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_event_listMouseClicked
         add = 0;
         bt_add_edit.setText("Edit");
@@ -389,22 +395,21 @@ public class events extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_bt_cancelActionPerformed
 
     private void bt_deleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_deleteActionPerformed
-        if(add == 0){
-        String qry = "delete from event where event_id=?";
-        try {
-            PreparedStatement stmt = con.prepareStatement(qry);
-            stmt.setString(1, id);
-            int res = stmt.executeUpdate();
-            if(res>=1){
-                JOptionPane.showMessageDialog(null, "Event Deleted Successfully...");
-                fillTable();
+        if (add == 0) {
+            String qry = "delete from event where event_id=?";
+            try {
+                Connection con = c.newDBConnection();
+                PreparedStatement stmt = con.prepareStatement(qry);
+                stmt.setString(1, id);
+                int res = stmt.executeUpdate();
+                if (res >= 1) {
+                    JOptionPane.showMessageDialog(null, "Event Deleted Successfully...");
+                    fillTable();
+                }
+
+            } catch (Exception e) {
             }
-            
-            
-        } catch (Exception e) {
-        }
-    }
-        else{
+        } else {
             JOptionPane.showMessageDialog(null, "Select an Event First...");
         }
     }//GEN-LAST:event_bt_deleteActionPerformed

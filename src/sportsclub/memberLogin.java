@@ -56,7 +56,7 @@ public class memberLogin extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        primary.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 0, 51), 2, true), "MemberLogin", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 3, 18), new java.awt.Color(255, 0, 0))); // NOI18N
+        primary.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 0, 51), 2, true), "MemberLogin", 0, 0, new java.awt.Font("Tahoma", 3, 18), new java.awt.Color(255, 0, 0))); // NOI18N
 
         bt_login.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         bt_login.setText("Login");
@@ -148,7 +148,7 @@ public class memberLogin extends javax.swing.JFrame {
                 .addGap(12, 12, 12))
         );
 
-        secondary.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 51, 102), 2, true), "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(255, 0, 51))); // NOI18N
+        secondary.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 51, 102), 2, true), "", 0, 0, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(255, 0, 51))); // NOI18N
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel7.setText("ID");
@@ -209,9 +209,9 @@ public class memberLogin extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(primary, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(31, 31, 31)
+                .addGap(18, 18, 18)
                 .addComponent(secondary, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGap(23, 23, 23))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -226,7 +226,6 @@ public class memberLogin extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void bt_loginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_loginActionPerformed
-      
 
         if ((tf_name.getText().trim().isEmpty())) {
             JOptionPane.showMessageDialog(null, "Enter Your Name...");
@@ -238,7 +237,7 @@ public class memberLogin extends javax.swing.JFrame {
                     System.out.println("connection established");
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                     String date = sdf.format(dt_chsr.getDate());
-                    PreparedStatement stmt = con.prepareStatement("select * from members where name=?,dob=?,bg=?");
+                    PreparedStatement stmt = con.prepareStatement("select * from members where name=? and dob=? and bg=?");
                     System.out.println("statement created");
                     stmt.setString(1, tf_name.getText());
                     stmt.setString(3, (String) cmb_bg.getSelectedItem());
@@ -251,10 +250,11 @@ public class memberLogin extends javax.swing.JFrame {
                         JOptionPane.showMessageDialog(null, "Loggin Successful...");
                         try {
 
-                            String sql = "update members set active=1 where id=?";
-                            stmt.setString(1, id);
-                            PreparedStatement un = con.prepareStatement(sql);
-                            un.executeQuery(sql);
+                            
+                            PreparedStatement un = con.prepareStatement("update members set active=1 where id=?");
+                            un.setString(1, id);
+                            un.executeUpdate();
+                            JOptionPane.showMessageDialog(null, "Your ID for Future Login : " + id);
                             this.setVisible(false);
                             member_sec ms = new member_sec();
                             ms.setVisible(true);
@@ -268,8 +268,6 @@ public class memberLogin extends javax.swing.JFrame {
                     } else {
                         JOptionPane.showMessageDialog(null, "Something went Wrong...");
                     }
-                    con.close();
-                    this.dispose();
                 }
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, e);
@@ -307,10 +305,9 @@ public class memberLogin extends javax.swing.JFrame {
                         JOptionPane.showMessageDialog(null, "Loggin Successful...");
                         try {
 
-                            String sql = "update members set active=1 where id=?";
-                            stmt.setString(1, id);
-                            PreparedStatement un = con.prepareStatement(sql);
-                            un.executeUpdate(sql);
+                            PreparedStatement un = con.prepareStatement("update members set active=1 where id=?");
+                            un.setString(1, id);
+                            un.executeUpdate();
                             this.setVisible(false);
                             member_sec ms = new member_sec();
                             ms.setVisible(true);

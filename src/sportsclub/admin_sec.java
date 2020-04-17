@@ -42,13 +42,13 @@ public class admin_sec extends javax.swing.JFrame {
         jMenu3 = new javax.swing.JMenu();
         visitor_history = new javax.swing.JMenuItem();
         history = new javax.swing.JMenuItem();
-        jm_event = new javax.swing.JCheckBoxMenuItem();
+        jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
         jMenu1 = new javax.swing.JMenu();
-        vm = new javax.swing.JMenuItem();
+        VM = new javax.swing.JMenuItem();
         anm = new javax.swing.JMenuItem();
-        jMenuItem3 = new javax.swing.JMenuItem();
-        jMenuItem5 = new javax.swing.JMenuItem();
+        vms = new javax.swing.JMenuItem();
+        am = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         FootBall = new javax.swing.JMenuItem();
         Crik = new javax.swing.JMenuItem();
@@ -100,14 +100,13 @@ public class admin_sec extends javax.swing.JFrame {
         });
         jMenu3.add(history);
 
-        jm_event.setSelected(true);
-        jm_event.setText("Events");
-        jm_event.addActionListener(new java.awt.event.ActionListener() {
+        jMenuItem1.setText("Events");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jm_eventActionPerformed(evt);
+                jMenuItem1ActionPerformed(evt);
             }
         });
-        jMenu3.add(jm_event);
+        jMenu3.add(jMenuItem1);
 
         jMenuItem4.setText("Logout");
         jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
@@ -126,13 +125,13 @@ public class admin_sec extends javax.swing.JFrame {
             }
         });
 
-        vm.setText("ViewMembers");
-        vm.addActionListener(new java.awt.event.ActionListener() {
+        VM.setText("ViewMembers");
+        VM.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                vmActionPerformed(evt);
+                VMActionPerformed(evt);
             }
         });
-        jMenu1.add(vm);
+        jMenu1.add(VM);
 
         anm.setText("AddNewMember");
         anm.addActionListener(new java.awt.event.ActionListener() {
@@ -142,16 +141,21 @@ public class admin_sec extends javax.swing.JFrame {
         });
         jMenu1.add(anm);
 
-        jMenuItem3.setText("ViewMemberSuggetions");
-        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+        vms.setText("ViewMemberSuggetions");
+        vms.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem3ActionPerformed(evt);
+                vmsActionPerformed(evt);
             }
         });
-        jMenu1.add(jMenuItem3);
+        jMenu1.add(vms);
 
-        jMenuItem5.setText("AppliedMembers");
-        jMenu1.add(jMenuItem5);
+        am.setText("AppliedMembers");
+        am.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                amActionPerformed(evt);
+            }
+        });
+        jMenu1.add(am);
 
         jMenuBar1.add(jMenu1);
 
@@ -210,11 +214,11 @@ public class admin_sec extends javax.swing.JFrame {
         nm.setVisible(true);
     }//GEN-LAST:event_anmActionPerformed
 
-    private void vmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_vmActionPerformed
+    private void VMActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_VMActionPerformed
         viewMember vm = new viewMember();
         Desktop.add(vm);
         vm.setVisible(true);
-    }//GEN-LAST:event_vmActionPerformed
+    }//GEN-LAST:event_VMActionPerformed
 
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
         
@@ -279,18 +283,21 @@ public class admin_sec extends javax.swing.JFrame {
         
     }//GEN-LAST:event_visitor_historyActionPerformed
 
-    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+    private void vmsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_vmsActionPerformed
         member_sug ms = new member_sug();
         Desktop.add(ms);
         ms.setVisible(true);
-    }//GEN-LAST:event_jMenuItem3ActionPerformed
+    }//GEN-LAST:event_vmsActionPerformed
 
-    private void jm_eventActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jm_eventActionPerformed
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         events ev = new events();
         Desktop.add(ev);
         ev.setVisible(true);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void amActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_amActionPerformed
         
-    }//GEN-LAST:event_jm_eventActionPerformed
+    }//GEN-LAST:event_amActionPerformed
 
     /**
      * @param args the command line arguments
@@ -331,19 +338,19 @@ public class admin_sec extends javax.swing.JFrame {
     private javax.swing.JMenuItem Crik;
     private javax.swing.JDesktopPane Desktop;
     private javax.swing.JMenuItem FootBall;
+    private javax.swing.JMenuItem VM;
+    private javax.swing.JMenuItem am;
     private javax.swing.JMenuItem anm;
     private javax.swing.JMenuItem history;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem4;
-    private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JCheckBoxMenuItem jm_event;
     private javax.swing.JMenuItem visitor_history;
-    private javax.swing.JMenuItem vm;
+    private javax.swing.JMenuItem vms;
     private javax.swing.JMenuItem vob;
     // End of variables declaration//GEN-END:variables
 }
