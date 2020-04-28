@@ -32,12 +32,13 @@ public class MemberList {
         this.ctgry=ctgry;
         this.date=date;
         this.lastDate=lastDate;
-    }public MemberList(String id,String ctgry,String date ,String lastDate){
+    }
+    /*public MemberList(String id,String ctgry,String date ,String lastDate){
         this.id=id;
         this.ctgry=ctgry;
         this.date=date;
         this.lastDate=lastDate;
-    }
+    }*/
 
     public String getId() {
         return id;

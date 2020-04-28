@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -22,16 +23,16 @@ public class member_sec extends javax.swing.JFrame {
 
     DefaultTableModel dt = new DefaultTableModel();
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-    String id = null;
+    String eid = null;
     DBConnection c = new DBConnection();
     Connection con = c.newDBConnection();
 
     public member_sec() {
         initComponents();
-        bt_apply.setVisible(false);
+        fillData();
 
         fillTable_my();
-        fillData();
+
         if (lbl_spitem.getText().contains("Foo")) {
             fillTable_new("FootBall");
         }
@@ -42,15 +43,18 @@ public class member_sec extends javax.swing.JFrame {
             fillTable_new("VolleyBall");
         }
 
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        bt_apply.setVisible(false);
+
     }
 
     public void fillTable_my() {
         ArrayList<MemberList> al = loadData();
-        dt = (DefaultTableModel) tbl_new_ev.getModel();
+        dt = (DefaultTableModel) tbl_my_ev.getModel();
         dt.setRowCount(0);
         Object[] row = new Object[2];
         for (int i = 0; i < al.size(); i++) {
-            row[0] = al.get(i).getCtgry();
+            row[0] = al.get(i).getName();
             row[1] = al.get(i).getDate();
             dt.addRow(row);
 
@@ -61,19 +65,20 @@ public class member_sec extends javax.swing.JFrame {
     public ArrayList<MemberList> loadData() {
         ArrayList<MemberList> al = null;
         al = new ArrayList<MemberList>();
+        String id = lbl_id.getText();
         try {
 
-            PreparedStatement evid = con.prepareStatement("select event_id from members where id=?");
-            evid.setString(1, lbl_id.getText());
+            PreparedStatement evid = con.prepareStatement("select * from members where id=?");
+            evid.setString(1, id);
             ResultSet res = evid.executeQuery();
             if (res.next()) {
-                String ctry[] = res.getString(1).split(",");
+                String ctry[] = res.getString(8).split(",");
                 for (int i = 0; i < ctry.length; i++) {
                     Statement stmt = con.createStatement();
-                    ResultSet rs = stmt.executeQuery("select * from event where category='" + ctry[i] + "'");
+                    ResultSet rs = stmt.executeQuery("select * from event where event_id='" + ctry[i] + "'");
                     MemberList list;
                     while (rs.next()) {
-                        list = new MemberList(rs.getString(1), rs.getString(2), rs.getString(4), rs.getString(5));
+                        list = new MemberList(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5));
                         al.add(list);
                     }
                 }
@@ -111,7 +116,7 @@ public class member_sec extends javax.swing.JFrame {
             ResultSet rs = stmt.executeQuery("select * from event where category='" + ctry + "'");
             MemberList list;
             while (rs.next()) {
-                list = new MemberList(rs.getString(1), rs.getString(2), rs.getString(4), rs.getString(5));
+                list = new MemberList(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5));
                 al.add(list);
             }
 
@@ -176,6 +181,7 @@ public class member_sec extends javax.swing.JFrame {
         lbl_spitem.setText("SportsItems");
 
         lbl_id.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
+        lbl_id.setForeground(new java.awt.Color(0, 204, 204));
         lbl_id.setText("ID");
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 20)); // NOI18N
@@ -191,6 +197,7 @@ public class member_sec extends javax.swing.JFrame {
         jLabel3.setText("PhoneNO");
 
         lbl_bg.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
+        lbl_bg.setForeground(new java.awt.Color(255, 0, 0));
         lbl_bg.setText("BloodGroup");
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 20)); // NOI18N
@@ -388,26 +395,47 @@ public class member_sec extends javax.swing.JFrame {
 
     private void bt_applyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_applyActionPerformed
 
-        String eid = tbl_new_ev.getModel().getValueAt(tbl_new_ev.getSelectedRow(), 3).toString();;
+        //String eid = tbl_new_ev.getModel().getValueAt(tbl_new_ev.getSelectedRow(), 0).toString();
+        String id = lbl_id.getText();
         try {
-            PreparedStatement stmt = con.prepareStatement("select event_id from members where id=?");
-            stmt.setString(1, lbl_id.getText());
+            PreparedStatement stmt = con.prepareStatement("select * from members where id=?");
+            stmt.setString(1, id);
             ResultSet rs = stmt.executeQuery();
+            String ev_id = null;
+            String ev_app = null;
             if (rs.next()) {
-                String ev_id = rs.getString(1);
-                if (ev_id.contains(id)) {
-                    JOptionPane.showMessageDialog(null, "You Already Applied for this Event...");
+                ev_id = rs.getString(8);
+                ev_app = rs.getString(9);
+                System.out.println(ev_id);
+                System.out.println(ev_app);
+
+            }
+            if (ev_id.contains(eid) || ev_app.contains(eid)) {
+                JOptionPane.showMessageDialog(null, "You Already Applied for this Event...");
+            }
+
+            else {
+
+                PreparedStatement updt = con.prepareStatement("update members set ev_app=? where id=?");
+
+                System.out.println("statement prepared");
+
+                if (ev_app.contains("e") || ev_app.contains("E")) {
+                    updt.setString(1, ev_app + "," + eid);
+
+                    System.out.println("in if statement");
+
                 } else {
 
-                    PreparedStatement updt = con.prepareStatement("update members set event_id=?  where id=?");
-                    updt.setString(1, ev_id + "," + id);
-                    updt.setString(2, lbl_id.getText());
-                    int res = updt.executeUpdate();
-                    if (res >= 1) {
-                        JOptionPane.showMessageDialog(null, "Applied Successfully...");
-                        fillTable_my();
-                    }
+                    System.out.println("in else statement");
 
+                    updt.setString(1, eid);
+                }
+                updt.setString(2, id);
+                int res = updt.executeUpdate();
+                if (res >= 1) {
+                    JOptionPane.showMessageDialog(null, "Applied Successfully...");
+                    fillTable_my();
                 }
 
             }
@@ -421,28 +449,26 @@ public class member_sec extends javax.swing.JFrame {
 
         bt_apply.setVisible(true);
         int ind = tbl_new_ev.getSelectedRow();
-        id = tbl_new_ev.getModel().getValueAt(ind, 0).toString();
+        eid = tbl_new_ev.getModel().getValueAt(ind, 0).toString();
 
     }//GEN-LAST:event_tbl_new_evMouseClicked
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        
-        
-        try{
+
+        try {
             Statement stmt = con.createStatement();
             int rs = stmt.executeUpdate("update members set active=0  where active=1");
-            if(rs>=1){
+            if (rs >= 1) {
                 JOptionPane.showMessageDialog(null, "Logout Successful...");
-                mainWindow mw=new mainWindow();
+                mainWindow mw = new mainWindow();
                 mw.setVisible(true);
                 this.dispose();
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             System.out.println(e);
         }
-        
-        
-        
+
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**

@@ -266,7 +266,7 @@ public class memberLogin extends javax.swing.JFrame {
                         //tf_name.setText("");
                         //dt_chsr.setDate("");
                     } else {
-                        JOptionPane.showMessageDialog(null, "Something went Wrong...");
+                        JOptionPane.showMessageDialog(null, "Your Name,DOB,BG MisMatch...");
                     }
                 }
             } catch (Exception e) {
@@ -319,10 +319,8 @@ public class memberLogin extends javax.swing.JFrame {
                         //tf_name.setText("");
                         //dt_chsr.setDate("");
                     } else {
-                        JOptionPane.showMessageDialog(null, "Something went Wrong...");
+                        JOptionPane.showMessageDialog(null, "Your ID,DOB misMatch...");
                     }
-                    con.close();
-                    this.dispose();
                 }
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, e);
