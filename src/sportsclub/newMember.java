@@ -18,12 +18,51 @@ public class newMember extends javax.swing.JInternalFrame {
 
     String ids = null;
     String tabl = null;
+    String tabl_id = null;
+    String uname = "";
+    String sql = null;
+    String msg = null;
+    int uv = 0;
 
     /**
      * Creates new form newMember
      */
     public newMember() {
         initComponents();
+        System.out.println("initialized " + jlbl_av.getText());
+
+    }
+
+    private void initilizing() {
+
+        System.out.println("out of if");
+        if (jlbl_av.getText().trim().contains("AddNewMember")) {
+            tabl = "admin";
+            msg = "Added";
+            tabl_id = "members";
+            ids = "M-";
+            sql = "insert into members(id,name,phone,dob,bg,sports) values(?,?,?,?,?,?)";
+            uv = 3;
+            System.out.println("Admin Section Initialized...");
+        } else if (jlbl_av.getText().trim().contains("Suggest_A_Member")) {
+            tabl = "visitors";
+            msg = "Suggested";
+            tabl_id = "member_sug";
+            ids = "MS-";
+            sql = "insert into member_sug(id,name,phone,dob,bg,sports,vname) values(?,?,?,?,?,?,?)";
+            uv = 2;
+            System.out.println("Visitor Section Initialized...");
+        }
+        try {
+            DBConnection c = new DBConnection();
+            Connection con = c.newDBConnection();
+            PreparedStatement un = con.prepareStatement("select * from " + tabl + " where active=1");
+            ResultSet rs = un.executeQuery();
+            if (rs.next()) {
+                uname = rs.getString(uv);
+            }
+        } catch (Exception e) {
+        }
     }
 
     /**
@@ -163,24 +202,29 @@ public class newMember extends javax.swing.JInternalFrame {
                 .addContainerGap(30, Short.MAX_VALUE))
         );
 
+        jlbl_av.setFont(new java.awt.Font("Tahoma", 3, 16)); // NOI18N
+        jlbl_av.setForeground(new java.awt.Color(51, 255, 204));
+        jlbl_av.setText("aaa");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(415, 415, 415)
-                        .addComponent(jlbl_av, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(8, 8, 8))
+                    .addComponent(jlbl_av, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jlbl_av, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(7, 7, 7)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
-                .addComponent(jlbl_av))
+                .addContainerGap())
         );
 
         pack();
@@ -195,14 +239,8 @@ public class newMember extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_cb_vbActionPerformed
 
     private void bt_addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_addActionPerformed
-        
-        if (jlbl_av.getText().trim().equals("AddNewMember")) {
-            tabl = "members";
-            ids = "M-";
-        } else if (jlbl_av.getText().trim().equals("Suggest_A_Member")) {
-            tabl = "visitors";
-            ids = "V-";
-        }
+
+        initilizing();
         if ((tf_name.getText().trim().isEmpty()) || (tf_phoneno.getText().trim().isEmpty())) {
             JOptionPane.showMessageDialog(null, "all fields are recquired...");
         } else {
@@ -213,7 +251,7 @@ public class newMember extends javax.swing.JInternalFrame {
                     System.out.println("connection established");
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                     String date = sdf.format(dt_chsr.getDate());
-                    PreparedStatement stmt = con.prepareStatement("insert into " + tabl + "(id,name,phone,dob,bg,sports) values(?,?,?,?,?,?)");
+                    PreparedStatement stmt = con.prepareStatement(sql);
                     System.out.println("statement created");
                     stmt.setString(1, idget());
                     stmt.setString(2, tf_name.getText());
@@ -243,33 +281,31 @@ public class newMember extends javax.swing.JInternalFrame {
                         }
                     }
                     stmt.setString(6, sports);
+                    if (ids.contains("MS-")) {
+                        stmt.setString(7, uname);
+                    }
                     System.out.println("statement created");
                     int res = stmt.executeUpdate();
                     if (res >= 1) {
-                        JOptionPane.showMessageDialog(null, "Member Added Successfully...");
+                        JOptionPane.showMessageDialog(null, "Member " + msg + " Successfully...");
                         try {
 
-                            String sql = "select * from admin where active=1";
-                            PreparedStatement un = con.prepareStatement(sql);
-                            ResultSet rs = un.executeQuery(sql);
-                            String uname = "";
-                            if (rs.next()) {
-                                uname = rs.getString(3);
+                            if (uv == 3) {
+                                PreparedStatement pst = con.prepareStatement("insert into history values(?,?,?,?)");
+                                pst.setString(1, uname);
+                                pst.setString(2, tf_name.getText());
+                                Date today = new Date();
+                                pst.setString(3, sdf.format(today));
+                                pst.setString(4, "Added");
+                                System.out.println("statement created");
+                                pst.executeUpdate();
+                                con.close();
                             }
-                            PreparedStatement pst = con.prepareStatement("insert into history values(?,?,?,?)");
-                            pst.setString(1, uname);
-                            pst.setString(2, tf_name.getText());
-                            Date today = new Date();
-                            pst.setString(3, sdf.format(today));
-                            pst.setString(4, "Added");
-                            System.out.println("statement created");
-                            int history = pst.executeUpdate();
-                            con.close();
                             //this.setVisible(false);
                         } catch (Exception e) {
                             JOptionPane.showMessageDialog(null, e);
                         }
-                            //tf_name.setText("");
+                        //tf_name.setText("");
                         //dt_chsr.setDate("");
                     } else {
                         JOptionPane.showMessageDialog(null, "Something went Wrong...");
@@ -290,7 +326,7 @@ public class newMember extends javax.swing.JInternalFrame {
             Connection con = c.newDBConnection();
             System.out.println("connection established");
             Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("select id from '"+tabl+"'");
+            ResultSet rs = stmt.executeQuery("select id from " + tabl_id);
             while (rs.next()) {
                 String id[] = rs.getString(1).split("-");
                 newid = Integer.parseInt(id[1]);;
@@ -310,7 +346,8 @@ public class newMember extends javax.swing.JInternalFrame {
 
     public void setAV(String a) {
         jlbl_av.setText(a);
-        jlbl_av.setVisible(false);
+        //jlbl_av.setVisible(false);
+        System.out.println("setAV " + jlbl_av.getText());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

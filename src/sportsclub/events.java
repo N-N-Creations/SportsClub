@@ -167,6 +167,7 @@ public class events extends javax.swing.JInternalFrame {
             event_list.getColumnModel().getColumn(5).setPreferredWidth(25);
         }
 
+        bt_add_edit.setForeground(new java.awt.Color(49, 221, 49));
         bt_add_edit.setText("Add");
         bt_add_edit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -191,6 +192,7 @@ public class events extends javax.swing.JInternalFrame {
 
         cmb_ctry.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Cricket", "FootBall", "VolleyBall" }));
 
+        bt_delete.setForeground(new java.awt.Color(237, 8, 30));
         bt_delete.setText("Delete");
         bt_delete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -266,7 +268,7 @@ public class events extends javax.swing.JInternalFrame {
 
         jButton1.setForeground(new java.awt.Color(255, 0, 0));
         jButton1.setText("X");
-        jButton1.setBorder(javax.swing.BorderFactory.createBevelBorder(0));
+        jButton1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -337,11 +339,13 @@ public class events extends javax.swing.JInternalFrame {
             if (rs >= 1) {
                 JOptionPane.showMessageDialog(null, "Event " + result + " Successfully...");
                 fillTable();
+                clearFiels();
             }
 
         } catch (Exception e) {
         }
         fillTable();
+        clearFiels();
 
 
     }//GEN-LAST:event_bt_add_editActionPerformed
@@ -385,14 +389,21 @@ public class events extends javax.swing.JInternalFrame {
 
     private void bt_cancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_cancelActionPerformed
         bt_add_edit.setText("Add");
+        bt_cancel.setVisible(false);
+        tf_name.setEnabled(true);
+        cmb_ctry.setEnabled(true);
+        clearFiels();
+    }//GEN-LAST:event_bt_cancelActionPerformed
+
+    private void clearFiels() {
+
+        add = 1;
         cmb_ctry.setSelectedIndex(0);
         dc_date.setDate(null);
         dc_ldate.setDate(null);
-        bt_cancel.setVisible(false);
         tf_name.setText("");
-        tf_name.setEnabled(true);
-        cmb_ctry.setEnabled(true);
-    }//GEN-LAST:event_bt_cancelActionPerformed
+    }
+
 
     private void bt_deleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_deleteActionPerformed
         if (add == 0) {
@@ -405,6 +416,7 @@ public class events extends javax.swing.JInternalFrame {
                 if (res >= 1) {
                     JOptionPane.showMessageDialog(null, "Event Deleted Successfully...");
                     fillTable();
+                    clearFiels();
                 }
 
             } catch (Exception e) {

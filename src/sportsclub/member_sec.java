@@ -30,6 +30,7 @@ public class member_sec extends javax.swing.JFrame {
     public member_sec() {
         initComponents();
         fillData();
+        fillTable_Applied();
 
         fillTable_my();
 
@@ -72,7 +73,7 @@ public class member_sec extends javax.swing.JFrame {
             evid.setString(1, id);
             ResultSet res = evid.executeQuery();
             if (res.next()) {
-                String ctry[] = res.getString(8).split(",");
+                String ctry[] = res.getString(9).split(",");
                 for (int i = 0; i < ctry.length; i++) {
                     Statement stmt = con.createStatement();
                     ResultSet rs = stmt.executeQuery("select * from event where event_id='" + ctry[i] + "'");
@@ -91,6 +92,50 @@ public class member_sec extends javax.swing.JFrame {
         return al;
     }
 
+    public void fillTable_Applied() {
+        ArrayList<MemberList> al = loadDataApplied();
+        dt = (DefaultTableModel) tbl_app_ev.getModel();
+        dt.setRowCount(0);
+        Object[] row = new Object[2];
+        for (int i = 0; i < al.size(); i++) {
+            row[0] = al.get(i).getName();
+            row[1] = al.get(i).getDate();
+            dt.addRow(row);
+
+        }
+
+    }
+
+    public ArrayList<MemberList> loadDataApplied() {
+        ArrayList<MemberList> al = null;
+        al = new ArrayList<MemberList>();
+        String id = lbl_id.getText();
+        try {
+
+            PreparedStatement evid = con.prepareStatement("select * from members where id=?");
+            evid.setString(1, id);
+            ResultSet res = evid.executeQuery();
+            if (res.next()) {
+                String ctry[] = res.getString(10).split(",");
+                for (int i = 0; i < ctry.length; i++) {
+                    Statement stmt = con.createStatement();
+                    ResultSet rs = stmt.executeQuery("select * from event where event_id='" + ctry[i] + "'");
+                    MemberList list;
+                    while (rs.next()) {
+                        list = new MemberList(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5));
+                        al.add(list);
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error in Retrive Data : " + e);
+
+        }
+        return al;
+    }
+    
+    
     public void fillTable_new(String ctry) {
         ArrayList<MemberList> al = loadData(ctry);
         dt = (DefaultTableModel) tbl_new_ev.getModel();
@@ -132,12 +177,12 @@ public class member_sec extends javax.swing.JFrame {
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("select * from members where active=1");
             if (rs.next()) {
-                lbl_id.setText(rs.getString(1));
-                lbl_name.setText(rs.getString(2));
-                lbl_pno.setText(rs.getString(3));
-                lbl_dob.setText(rs.getString(4));
-                lbl_bg.setText(rs.getString(5));
-                lbl_spitem.setText(rs.getString(6));
+                lbl_id.setText(rs.getString(2));
+                lbl_name.setText(rs.getString(3));
+                lbl_pno.setText(rs.getString(4));
+                lbl_dob.setText(rs.getString(5));
+                lbl_bg.setText(rs.getString(6));
+                lbl_spitem.setText(rs.getString(7));
             }
         } catch (Exception e) {
         }
@@ -165,11 +210,13 @@ public class member_sec extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         lbl_dob = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tbl_my_ev = new javax.swing.JTable();
+        tbl_app_ev = new javax.swing.JTable();
         jScrollPane2 = new javax.swing.JScrollPane();
         tbl_new_ev = new javax.swing.JTable();
         bt_apply = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        tbl_my_ev = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -260,12 +307,12 @@ public class member_sec extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        tbl_my_ev.setModel(new javax.swing.table.DefaultTableModel(
+        tbl_app_ev.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "MyEvents", "Date"
+                "AppliedEvents", "Date"
             }
         ) {
             Class[] types = new Class [] {
@@ -283,12 +330,12 @@ public class member_sec extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(tbl_my_ev);
-        if (tbl_my_ev.getColumnModel().getColumnCount() > 0) {
-            tbl_my_ev.getColumnModel().getColumn(0).setResizable(false);
-            tbl_my_ev.getColumnModel().getColumn(0).setPreferredWidth(65);
-            tbl_my_ev.getColumnModel().getColumn(1).setResizable(false);
-            tbl_my_ev.getColumnModel().getColumn(1).setPreferredWidth(15);
+        jScrollPane1.setViewportView(tbl_app_ev);
+        if (tbl_app_ev.getColumnModel().getColumnCount() > 0) {
+            tbl_app_ev.getColumnModel().getColumn(0).setResizable(false);
+            tbl_app_ev.getColumnModel().getColumn(0).setPreferredWidth(65);
+            tbl_app_ev.getColumnModel().getColumn(1).setResizable(false);
+            tbl_app_ev.getColumnModel().getColumn(1).setPreferredWidth(15);
         }
 
         tbl_new_ev.setModel(new javax.swing.table.DefaultTableModel(
@@ -345,50 +392,88 @@ public class member_sec extends javax.swing.JFrame {
             }
         });
 
+        tbl_my_ev.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "MyEvents", "Date"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane3.setViewportView(tbl_my_ev);
+        if (tbl_my_ev.getColumnModel().getColumnCount() > 0) {
+            tbl_my_ev.getColumnModel().getColumn(0).setResizable(false);
+            tbl_my_ev.getColumnModel().getColumn(0).setPreferredWidth(65);
+            tbl_my_ev.getColumnModel().getColumn(1).setResizable(false);
+            tbl_my_ev.getColumnModel().getColumn(1).setPreferredWidth(15);
+        }
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 266, Short.MAX_VALUE)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
-                    .addGroup(layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lbl_name, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGap(4, 4, 4)
+                        .addComponent(lbl_name, javax.swing.GroupLayout.PREFERRED_SIZE, 601, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(14, 14, 14)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(621, 621, 621)
                         .addComponent(bt_apply, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
+
+        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jScrollPane1, jScrollPane2, jScrollPane3});
+
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(35, 35, 35)
-                .addComponent(lbl_name, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGap(11, 11, 11)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(56, 56, 56)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                        .addGap(24, 24, 24)
+                        .addComponent(lbl_name, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(51, 51, 51)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(51, 51, 51)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addComponent(bt_apply)
-                .addContainerGap(27, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
+
+        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {jScrollPane1, jScrollPane2, jScrollPane3});
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -404,21 +489,16 @@ public class member_sec extends javax.swing.JFrame {
             String ev_id = null;
             String ev_app = null;
             if (rs.next()) {
-                ev_id = rs.getString(8);
-                ev_app = rs.getString(9);
-                System.out.println(ev_id);
-                System.out.println(ev_app);
+                ev_id = rs.getString(9);
+                ev_app = rs.getString(10);
 
             }
             if (ev_id.contains(eid) || ev_app.contains(eid)) {
                 JOptionPane.showMessageDialog(null, "You Already Applied for this Event...");
             }
-
             else {
 
                 PreparedStatement updt = con.prepareStatement("update members set ev_app=? where id=?");
-
-                System.out.println("statement prepared");
 
                 if (ev_app.contains("e") || ev_app.contains("E")) {
                     updt.setString(1, ev_app + "," + eid);
@@ -435,13 +515,14 @@ public class member_sec extends javax.swing.JFrame {
                 int res = updt.executeUpdate();
                 if (res >= 1) {
                     JOptionPane.showMessageDialog(null, "Applied Successfully...");
-                    fillTable_my();
+                    fillTable_Applied();
                 }
 
             }
 
         } catch (Exception e) {
         }
+        eid = null;
         bt_apply.setVisible(false);
     }//GEN-LAST:event_bt_applyActionPerformed
 
@@ -517,12 +598,14 @@ public class member_sec extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JLabel lbl_bg;
     private javax.swing.JLabel lbl_dob;
     private javax.swing.JLabel lbl_id;
     private javax.swing.JLabel lbl_name;
     private javax.swing.JLabel lbl_pno;
     private javax.swing.JLabel lbl_spitem;
+    private javax.swing.JTable tbl_app_ev;
     private javax.swing.JTable tbl_my_ev;
     private javax.swing.JTable tbl_new_ev;
     // End of variables declaration//GEN-END:variables

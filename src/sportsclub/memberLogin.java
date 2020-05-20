@@ -246,7 +246,7 @@ public class memberLogin extends javax.swing.JFrame {
                     System.out.println("statement created");
                     ResultSet res = stmt.executeQuery();
                     if (res.next()) {
-                        String id = res.getString(1);
+                        String id = res.getString(2);
                         JOptionPane.showMessageDialog(null, "Loggin Successful...");
                         try {
 

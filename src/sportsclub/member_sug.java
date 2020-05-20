@@ -31,6 +31,7 @@ public class member_sug extends javax.swing.JInternalFrame {
 
     public member_sug() {
         initComponents();
+        fillTable();
     }
 
     public ArrayList<MemberList> loadData() {
@@ -41,11 +42,11 @@ public class member_sug extends javax.swing.JInternalFrame {
             Connection con = c.newDBConnection();
             System.out.println("Connection Established");
             Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("select * from members");
+            ResultSet rs = stmt.executeQuery("select * from member_sug");
             MemberList list;
 
             while (rs.next()) {
-                list = new MemberList(rs.getString(1), rs.getString("name"), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6));
+                list = new MemberList(rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7));
                 al.add(list);
 
             }
@@ -78,11 +79,11 @@ public class member_sug extends javax.swing.JInternalFrame {
 
     public void showItemToFields(int index) throws ParseException {
 
-        tf_name.setText(member_list.getModel().getValueAt(index, 3).toString());
-        tf_phn.setText(member_list.getModel().getValueAt(index, 4).toString());
-        cmb_bg.setSelectedItem(member_list.getModel().getValueAt(index, 6).toString());
-        dc_dob.setDate(sdf.parse(member_list.getModel().getValueAt(index, 5).toString()));
-        sports = (member_list.getModel().getValueAt(index, 7).toString());
+        tf_name.setText(member_list.getModel().getValueAt(index, 2).toString());
+        tf_phn.setText(member_list.getModel().getValueAt(index, 3).toString());
+        cmb_bg.setSelectedItem(member_list.getModel().getValueAt(index, 5).toString());
+        dc_dob.setDate(sdf.parse(member_list.getModel().getValueAt(index, 4).toString()));
+        sports = (member_list.getModel().getValueAt(index, 6).toString());
 
         if (sports.contains("Foot")) {
             cb_fb.setSelected(true);
@@ -293,6 +294,7 @@ public class member_sug extends javax.swing.JInternalFrame {
 
     private void member_listMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_member_listMouseClicked
         // TODO add your handling code here:
+        id = 1;
         int ind = member_list.getSelectedRow();
         try {
             showItemToFields(ind);
@@ -305,7 +307,7 @@ public class member_sug extends javax.swing.JInternalFrame {
         // TODO add your handling code for Update:
 
         if ((tf_name.getText().trim().isEmpty()) || (tf_phn.getText().trim().isEmpty())) {
-            JOptionPane.showMessageDialog(null, "all fields are recquired...");
+            JOptionPane.showMessageDialog(null, "Select one from the Suggestions...");
         } else {
 
             try {
@@ -366,6 +368,7 @@ public class member_sug extends javax.swing.JInternalFrame {
                             System.out.println("statement created");
                             pst.executeUpdate();
                             deleteEntry();
+                            fillTable();
 
                             con.close();
                             //this.setVisible(false);
@@ -419,21 +422,23 @@ public class member_sug extends javax.swing.JInternalFrame {
             int opt = JOptionPane.showConfirmDialog(null, "Do you really want to Delete", "Delete", JOptionPane.YES_NO_OPTION);
             if (opt == 0) {
                 deleteEntry();
+                id = 0;
+                fillTable();
             }
         }
     }//GEN-LAST:event_bt_DecclineActionPerformed
 
     public void deleteEntry() {
         try {
-            String qry = "delete from member_sug where name=?,phone=?,dob=?,bg=?,sports=?";
+            String qry = "delete from member_sug where name=? and phone=? and dob=?";
             DBConnection c = new DBConnection();
             Connection con = c.newDBConnection();
             PreparedStatement ps = con.prepareStatement(qry);
             ps.setString(1, tf_name.getText());
             ps.setString(2, tf_phn.getText());
             ps.setString(3, sdf.format(dc_dob.getDate()));
-            ps.setString(4, (String) cmb_bg.getSelectedItem());
-            ps.setString(5, sports);
+            //ps.setString(4, (String) cmb_bg.getSelectedItem());
+            //ps.setString(5, sports);
             //JOptionPane.showConfirmDialog(rootPane, closable);
             int res = ps.executeUpdate();
             if (res >= 1) {
@@ -476,6 +481,15 @@ public class member_sug extends javax.swing.JInternalFrame {
         return "M-" + newid;
     }
 
+    /*private void clearFiels(){
+     tf_name.setText("");
+     tf_phn.setText("");
+     dc_dob.setDate(null);
+     cmb_bg.setSelectedIndex(0);
+     cb_ckt.setSelected(false);
+     cb_fb.setSelected(false);
+     cb_vb.setSelected(false);
+     }*/
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bt_Accept;

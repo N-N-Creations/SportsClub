@@ -6,7 +6,6 @@
 package sportsclub;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.time.LocalDate;
@@ -59,7 +58,7 @@ public void fillTable(String sprt){
         
             
             while(rs.next()){
-                list =new MemberList(rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6));
+                list =new MemberList(rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7));
                 al.add(list);
             }
             dt = (DefaultTableModel) member_list.getModel();

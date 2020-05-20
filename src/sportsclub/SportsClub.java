@@ -15,11 +15,11 @@ public class SportsClub {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        /*mainWindow mw=new mainWindow();
-        mw.setVisible(true);*/
-        loading ld = new loading();
+        mainWindow mw=new mainWindow();
+        mw.setVisible(true);
+        /*loading ld = new loading();
         ld.setUpLoading();
-        ld.setVisible(true);
+        ld.setVisible(true);*/
     }
     
 }

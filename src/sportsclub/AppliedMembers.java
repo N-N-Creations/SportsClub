@@ -5,6 +5,17 @@
  */
 package sportsclub;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -15,8 +26,56 @@ public class AppliedMembers extends javax.swing.JInternalFrame {
     /**
      * Creates new form AppliedMembers
      */
+    DefaultTableModel dt = new DefaultTableModel();
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    String id = null;
+    DBConnection c = new DBConnection();
+    Connection con = c.newDBConnection();
+
     public AppliedMembers() {
         initComponents();
+        jp_buttons.setVisible(false);
+        fillTable();
+    }
+
+    public void fillTable() {
+        ArrayList<MemberList> al = loadData();
+        dt = (DefaultTableModel) tb_applied_members.getModel();
+        dt.setRowCount(0);
+        Object[] row = new Object[4];
+        int j = 1;
+        for (int i = 0; i < al.size(); i++) {
+            row[0] = j;
+            row[1] = al.get(i).getId();
+            row[2] = al.get(i).getName();
+            row[3] = al.get(i).getCtgry();
+            j++;
+            dt.addRow(row);
+
+        }
+
+    }
+
+    public ArrayList<MemberList> loadData() {
+        ArrayList<MemberList> al = null;
+        al = new ArrayList<MemberList>();
+        try {
+
+            System.out.println("Connection Established");
+            Connection con = c.newDBConnection();
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("select * from members where ev_app like '%e%'");
+            MemberList list;
+            while (rs.next()) {
+                list = new MemberList(rs.getString(2), rs.getString(3), rs.getString(10));
+                al.add(list);
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error in Retrive Data : " + e);
+
+        }
+        return al;
     }
 
     /**
@@ -29,14 +88,28 @@ public class AppliedMembers extends javax.swing.JInternalFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tb_applied_members = new javax.swing.JTable();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        M_Name = new javax.swing.JLabel();
+        tf_mname = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
+        tf_mid = new javax.swing.JTextField();
+        jLabel8 = new javax.swing.JLabel();
+        cmb_eid = new javax.swing.JComboBox();
+        jp_buttons = new javax.swing.JPanel();
+        bt_cancel = new javax.swing.JButton();
+        bt_accept = new javax.swing.JButton();
+        bt_decline = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tb_applied_members.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "SL_NO", "M_DI", "Name", "Event"
+                "SL_NO", "M_ID", "Name", "E_ID"
             }
         ) {
             Class[] types = new Class [] {
@@ -54,13 +127,141 @@ public class AppliedMembers extends javax.swing.JInternalFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(jTable1);
-        if (jTable1.getColumnModel().getColumnCount() > 0) {
-            jTable1.getColumnModel().getColumn(0).setPreferredWidth(10);
-            jTable1.getColumnModel().getColumn(1).setPreferredWidth(10);
-            jTable1.getColumnModel().getColumn(2).setPreferredWidth(30);
-            jTable1.getColumnModel().getColumn(3).setPreferredWidth(50);
+        tb_applied_members.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tb_applied_membersMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tb_applied_members);
+        if (tb_applied_members.getColumnModel().getColumnCount() > 0) {
+            tb_applied_members.getColumnModel().getColumn(0).setPreferredWidth(10);
+            tb_applied_members.getColumnModel().getColumn(1).setPreferredWidth(10);
+            tb_applied_members.getColumnModel().getColumn(2).setPreferredWidth(30);
+            tb_applied_members.getColumnModel().getColumn(3).setPreferredWidth(50);
         }
+
+        jLabel2.setFont(new java.awt.Font("Tahoma", 3, 10)); // NOI18N
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setText("Accept / Decline");
+
+        M_Name.setText("M_Name");
+
+        jLabel7.setText("M_ID");
+
+        jLabel8.setText("E_ID");
+
+        bt_cancel.setText("Cancel");
+        bt_cancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bt_cancelActionPerformed(evt);
+            }
+        });
+
+        bt_accept.setForeground(new java.awt.Color(49, 221, 49));
+        bt_accept.setText("Accept");
+        bt_accept.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bt_acceptActionPerformed(evt);
+            }
+        });
+
+        bt_decline.setForeground(new java.awt.Color(237, 8, 30));
+        bt_decline.setText("Decline");
+        bt_decline.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bt_declineActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jp_buttonsLayout = new javax.swing.GroupLayout(jp_buttons);
+        jp_buttons.setLayout(jp_buttonsLayout);
+        jp_buttonsLayout.setHorizontalGroup(
+            jp_buttonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jp_buttonsLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(bt_cancel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(bt_decline)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(bt_accept)
+                .addContainerGap())
+        );
+        jp_buttonsLayout.setVerticalGroup(
+            jp_buttonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jp_buttonsLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jp_buttonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(bt_accept)
+                    .addComponent(bt_decline)
+                    .addComponent(bt_cancel))
+                .addContainerGap())
+        );
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(31, 31, 31)
+                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(M_Name, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(26, 26, 26)
+                                .addComponent(tf_mname, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(26, 26, 26)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(tf_mid, javax.swing.GroupLayout.DEFAULT_SIZE, 118, Short.MAX_VALUE)
+                                    .addComponent(cmb_eid, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jp_buttons, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(M_Name)
+                    .addComponent(tf_mname, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(30, 30, 30)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(tf_mid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(30, 30, 30)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(cmb_eid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jp_buttons, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(33, 33, 33))
+        );
+
+        jLabel1.setFont(new java.awt.Font("Trebuchet MS", 3, 24)); // NOI18N
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("Applied Members");
+
+        jButton1.setForeground(new java.awt.Color(255, 0, 0));
+        jButton1.setText("X");
+        jButton1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -69,22 +270,192 @@ public class AppliedMembers extends javax.swing.JInternalFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 510, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(239, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(7, 7, 7))
+            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(118, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 309, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(11, 11, 11)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 309, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(12, 12, 12))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void bt_acceptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_acceptActionPerformed
+
+        try {
+            PreparedStatement stmt = con.prepareStatement("select * from members where id=?");
+            stmt.setString(1, id);
+            ResultSet rs = stmt.executeQuery();
+            String ev_id = null;
+            String ev_app = null;
+            String eid = cmb_eid.getSelectedItem().toString();
+            if (rs.next()) {
+                ev_id = rs.getString(9);
+                ev_app = rs.getString(10);
+            }
+
+            PreparedStatement updt = con.prepareStatement("update members set event_id=?,ev_app=? where id=?");
+
+            if (ev_id.contains("e") || ev_id.contains("E")) {
+                updt.setString(1, ev_id + "," + eid);
+
+                //System.out.println("in if statement");
+            } else {
+
+                //System.out.println("in else statement");
+                updt.setString(1, eid);
+            }
+
+            String temp_aid[] = ev_app.split(",");
+            String temp = null;
+            for (int i = 0; i < temp_aid.length; i++) {
+                if (temp_aid[i].contains(eid)) {
+
+                } else {
+                    if (temp.contains("e") || temp.contains("E")) {
+                        temp = temp + temp_aid[i];
+                    } else {
+                        temp = temp_aid[i];
+                    }
+                }
+            }
+            updt.setString(2, temp);
+
+            updt.setString(3, id);
+            int res = updt.executeUpdate();
+            if (res >= 1) {
+                JOptionPane.showMessageDialog(null, "Accepted...");
+                fillTable();
+
+            }
+
+        } catch (Exception e) {
+        }
+        fillTable();
+
+
+    }//GEN-LAST:event_bt_acceptActionPerformed
+
+    private void bt_cancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_cancelActionPerformed
+        tf_mname.setText("");
+        tf_mid.setText("");
+        cmb_eid.removeAllItems();
+        jp_buttons.setVisible(false);
+    }//GEN-LAST:event_bt_cancelActionPerformed
+
+    private void bt_declineActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_declineActionPerformed
+
+        int opt = JOptionPane.showConfirmDialog(null, "Do you really want to Delete", "Delete", JOptionPane.YES_NO_OPTION);
+        if (opt == 0) {
+            try {
+                PreparedStatement stmt = con.prepareStatement("select * from members where id=?");
+                stmt.setString(1, id);
+                ResultSet rs = stmt.executeQuery();
+                String ev_id = null;
+                String ev_app = null;
+                String eid = cmb_eid.getSelectedItem().toString();
+                if (rs.next()) {
+                    ev_id = rs.getString(9);
+                    ev_app = rs.getString(10);
+                }
+
+                PreparedStatement updt = con.prepareStatement("update members set ev_app=? where id=?");
+
+                String temp_aid[] = ev_app.split(",");
+                String temp = null;
+                System.out.println("before for loop");
+                for (int i = 0; i < temp_aid.length; i++) {
+                    System.out.println("in for loop");
+                    if (temp_aid[i].contains(eid)) {
+                    } else {
+                        //-------------------------------------------
+                        if (temp.contains("e") || temp.contains("E")) {
+                            temp = temp + temp_aid[i];
+                        } else {
+                            temp = temp_aid[i];
+                        }
+                    }
+                }
+                updt.setString(1, temp);
+
+                updt.setString(2, id);
+                int res = updt.executeUpdate();
+                if (res >= 1) {
+                    JOptionPane.showMessageDialog(null, "Deleted...");
+                    fillTable();
+
+                }
+
+            } catch (Exception e) {
+            }
+
+        }
+        fillTable();
+    }//GEN-LAST:event_bt_declineActionPerformed
+
+    private void tb_applied_membersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tb_applied_membersMouseClicked
+
+        int ind = tb_applied_members.getSelectedRow();
+        try {
+            showItemToFields(ind);
+        } catch (ParseException ex) {
+            Logger.getLogger(AppliedMembers.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+
+    }//GEN-LAST:event_tb_applied_membersMouseClicked
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    public void showItemToFields(int index) throws ParseException {
+        id = tb_applied_members.getModel().getValueAt(index, 1).toString();
+        tf_mname.setText(tb_applied_members.getModel().getValueAt(index, 2).toString());
+        tf_mid.setText(id);
+        cmb_eid.removeAllItems();
+
+        String eid[] = tb_applied_members.getModel().getValueAt(index, 3).toString().split(",");
+        for (int i = 0; i < eid.length; i++) {
+            cmb_eid.addItem(eid[i]);
+
+        }
+        jp_buttons.setVisible(true);
+
+    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel M_Name;
+    private javax.swing.JButton bt_accept;
+    private javax.swing.JButton bt_cancel;
+    private javax.swing.JButton bt_decline;
+    private javax.swing.JComboBox cmb_eid;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JPanel jp_buttons;
+    private javax.swing.JTable tb_applied_members;
+    private javax.swing.JTextField tf_mid;
+    private javax.swing.JTextField tf_mname;
     // End of variables declaration//GEN-END:variables
 }

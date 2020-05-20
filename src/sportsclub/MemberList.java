@@ -1,4 +1,3 @@
-
 package sportsclub;
 
 /**
@@ -6,6 +5,7 @@ package sportsclub;
  * @author N&N Creations
  */
 public class MemberList {
+
     private String id;
     private String name;
     private String phone;
@@ -14,31 +14,29 @@ public class MemberList {
     private String ctgry;
     private String date;
     private String lastDate;
-    
-    
-    
-    
-    public MemberList(String id,String name,String phone ,String dob,String bg,String ctgry){
-        this.id=id;
-        this.name=name;
-        this.phone=phone;
-        this.dob=dob;
-        this.bg=bg;
-        this.ctgry=ctgry;
+
+    public MemberList(String id, String name, String phone, String dob, String bg, String ctgry) {
+        this.id = id;
+        this.name = name;
+        this.phone = phone;
+        this.dob = dob;
+        this.bg = bg;
+        this.ctgry = ctgry;
     }
-    public MemberList(String id,String name,String ctgry,String date ,String lastDate){
-        this.id=id;
-        this.name=name;
-        this.ctgry=ctgry;
-        this.date=date;
-        this.lastDate=lastDate;
+
+    public MemberList(String id, String name, String ctgry, String date, String lastDate) {
+        this.id = id;
+        this.name = name;
+        this.ctgry = ctgry;
+        this.date = date;
+        this.lastDate = lastDate;
     }
-    /*public MemberList(String id,String ctgry,String date ,String lastDate){
-        this.id=id;
-        this.ctgry=ctgry;
-        this.date=date;
-        this.lastDate=lastDate;
-    }*/
+
+    public MemberList(String id, String name, String ctgry) {
+        this.id = id;
+        this.name = name;
+        this.ctgry = ctgry;
+    }
 
     public String getId() {
         return id;
@@ -67,8 +65,6 @@ public class MemberList {
     public void setLastDate(String lastDate) {
         this.lastDate = lastDate;
     }
-
-    
 
     public void setName(String name) {
         this.name = name;
@@ -105,8 +101,5 @@ public class MemberList {
     public void setCtgry(String ctgry) {
         this.ctgry = ctgry;
     }
-    
-    
-    
-    
+
 }

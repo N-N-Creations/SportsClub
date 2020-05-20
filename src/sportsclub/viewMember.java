@@ -68,7 +68,7 @@ public class viewMember extends javax.swing.JInternalFrame {
             MemberList list;
 
             while (rs.next()) {
-                list = new MemberList(rs.getString(1), rs.getString("name"), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6));
+                list = new MemberList(rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7));
                 al.add(list);
 
             }
@@ -124,12 +124,12 @@ public class viewMember extends javax.swing.JInternalFrame {
             ResultSet rs = stmt.executeQuery("select * from members where id='" + id + "'");
             if (rs.next()) {
                 Date dob = null;
-                dob = new SimpleDateFormat("yyyy-MM-dd").parse((String) rs.getString(4));
+                dob = new SimpleDateFormat("yyyy-MM-dd").parse((String) rs.getString(5));
                 dc_dob.setDate(dob);
-                tf_search.setText(rs.getString(2));
-                tf_phn.setText(rs.getString(3));
-                cmb_bg.setSelectedItem((rs.getString(5)));
-                String sports = (rs.getString(6));
+                tf_search.setText(rs.getString(3));
+                tf_phn.setText(rs.getString(4));
+                cmb_bg.setSelectedItem((rs.getString(6)));
+                String sports = (rs.getString(7));
                 if (sports.contains("Foot")) {
                     cb_fb.setSelected(true);
                 } else {
@@ -180,7 +180,7 @@ public class viewMember extends javax.swing.JInternalFrame {
         jPanel1 = new javax.swing.JPanel();
         bt_update = new javax.swing.JButton();
         bt_delete = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        bt_clear = new javax.swing.JButton();
 
         member_list.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -297,10 +297,10 @@ public class viewMember extends javax.swing.JInternalFrame {
             }
         });
 
-        jButton3.setText("Clear");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        bt_clear.setText("Clear");
+        bt_clear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                bt_clearActionPerformed(evt);
             }
         });
 
@@ -313,7 +313,7 @@ public class viewMember extends javax.swing.JInternalFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(bt_update, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(bt_delete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(bt_clear, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -324,7 +324,7 @@ public class viewMember extends javax.swing.JInternalFrame {
                 .addGap(18, 18, 18)
                 .addComponent(bt_delete)
                 .addGap(18, 18, 18)
-                .addComponent(jButton3)
+                .addComponent(bt_clear)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -435,7 +435,7 @@ public class viewMember extends javax.swing.JInternalFrame {
                 MemberList list;
 
                 while (rs.next()) {
-                    list = new MemberList(rs.getString(1), rs.getString("name"), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6));
+                    list = new MemberList(rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7));
                     al.add(list);
                 }
                 dt = (DefaultTableModel) member_list.getModel();
@@ -495,7 +495,7 @@ public class viewMember extends javax.swing.JInternalFrame {
             MemberList list;
 
             while (rs.next()) {
-                list = new MemberList(rs.getString(1), rs.getString("name"), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6));
+                list = new MemberList(rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7));
                 al.add(list);
             }
             dt = (DefaultTableModel) member_list.getModel();
@@ -604,6 +604,7 @@ public class viewMember extends javax.swing.JInternalFrame {
                             //tf_name.setText("");
                         //dt_chsr.setDate("");
                         fillTable();
+                        clearField();
                         id = null;
                         search = 1;
                     } else {
@@ -650,7 +651,7 @@ public class viewMember extends javax.swing.JInternalFrame {
                             pst.setString(2, tf_search.getText());
                             Date today = new Date();
                             pst.setString(3, sdf.format(today));
-                            pst.setString(4, "Added");
+                            pst.setString(4, "Deleted");
                             System.out.println("statement created");
                             int history = pst.executeUpdate();
                             con.close();
@@ -659,6 +660,7 @@ public class viewMember extends javax.swing.JInternalFrame {
                             JOptionPane.showMessageDialog(null, e);
                         }
                         fillTable();
+                        clearField();
                         id = null;
                         search = 1;
                     } else {
@@ -710,8 +712,18 @@ public class viewMember extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_cb_vbActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void bt_clearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_clearActionPerformed
         search = 1;
+        clearField();
+        fillTable();
+    }//GEN-LAST:event_bt_clearActionPerformed
+
+    public void setVisitor() {
+        jPanel1.setVisible(false);
+    }
+
+    
+    private void clearField(){
         tf_search.setText("");
         tf_phn.setText("");
         cmb_bg.setSelectedIndex(0);
@@ -719,15 +731,15 @@ public class viewMember extends javax.swing.JInternalFrame {
         cb_fb.setSelected(false);
         cb_vb.setSelected(false);
         dc_dob.setDate(null);
-        fillTable();
-    }//GEN-LAST:event_jButton3ActionPerformed
-
-    public void setVisitor() {
-        jPanel1.setVisible(false);
     }
-
+    
+    
+    
+    
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton bt_clear;
     private javax.swing.JButton bt_delete;
     private javax.swing.JButton bt_update;
     private javax.swing.JCheckBox cb_ckt;
@@ -737,7 +749,6 @@ public class viewMember extends javax.swing.JInternalFrame {
     private com.toedter.calendar.JDateChooser dc_dob;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
