@@ -1,13 +1,13 @@
-jasper ......select
-try{
-            JasperDesign jd = JRXmlLoader.load(report);
-            JRDesignQuery newquery = new JRDesignQuery();
-            String name= lbl_search.getText();
-            newquery.setText("select * from members where name='"+name+"'");
-            
+jaspe........show all
+{                                         
+        DBConnection c=new DBConnection();
+        Connection con=c.newDBConnection();
+        String report = "D:\\N&N\\SportsClub\\SportsClub-master\\src\\sportsclub\\members.jrxml";
+        try{
             JasperReport jp = JasperCompileManager.compileReport(report);
             System.out.println("Compiled...");
             JasperPrint jprint = JasperFillManager.fillReport(jp,null,con);
             JasperViewer.viewReport(jprint,false);
-        }catch
-
+        }catch(Exception e){
+            
+        }
