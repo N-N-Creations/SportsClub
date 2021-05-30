@@ -731,6 +731,7 @@ public class viewMember extends javax.swing.JInternalFrame {
         cb_fb.setSelected(false);
         cb_vb.setSelected(false);
         dc_dob.setDate(null);
+        a = 1;
     }
     
     
